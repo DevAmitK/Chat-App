@@ -35,11 +35,9 @@ class NewChatViewModel @Inject constructor(
         execute(showLoadingDialog = false) {
 
             val channel = channelRepo.getOneToOneChat(currentUserId(), otherUserId)
-            val channelId =  if (channel != null) {
-                channel.id()
-            } else {
-                channelRepo.createOneToOneChannel(currentUserId(),otherUserId)
-            }
+
+            val channelId =
+                channel?.id() ?: channelRepo.createOneToOneChannel(currentUserId(),otherUserId)
             executeOnMain {
                 onChannelReady(channelId)
             }

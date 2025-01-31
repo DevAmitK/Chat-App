@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    val repo: ChannelRepo,
+    private val repo: ChannelRepo,
 ) : BaseViewModel() {
     val channel = taskStateOf<Channel>()
 

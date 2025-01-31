@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
 import com.example.mychatapp.ui.comp.ProfileImagePicker
-import com.google.firebase.firestore.core.UserData
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
@@ -57,19 +56,20 @@ fun UserProfileScreen(navHostController: NavHostController, viewModel: UserProfi
     val mediaPickerDialogState = rememberMediaPickerDialogState()
     val scope = rememberCoroutineScope()
 
-
     TitleBarScaffold(title = "Profile Screen",
         navigateUp = {
             navHostController.navigateUp()
-        }) {
+        }){
+
         LaunchedEffect(key1 = Unit) {
             viewModel.getUser()
         }
+
         viewModel.user.whenLoaded {userData->
             if (userData != null) {
                 var userName by remember { mutableStateOf(userData.name) }
                 var userBio by remember { mutableStateOf( userData.bio ?: "No Bio")}
-                var userEmail by remember { mutableStateOf(userData.email) }
+                val userEmail by remember { mutableStateOf(userData.email) }
 
                 Column(
                     modifier = Modifier
@@ -101,33 +101,32 @@ fun UserProfileScreen(navHostController: NavHostController, viewModel: UserProfi
                                 .align(Alignment.BottomEnd)
                                 .size(40.dp)
                                 .clickable {
-                                        mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
-                                            type = MediaType.Image,
-                                            allowMultiple = false,
-                                            fromGalleryType = FromGalleryType.VisualMediaPicker,
-                                            cropParams =
-                                            MediaPickerCropParams.Enabled(
-                                                showAspectRatioSelectionButton = false,
-                                                showShapeCropButton = false,
-                                                lockAspectRatio = AspectRatio(1, 1)
-                                            ),
-                                            callback = { getList ->
-                                                scope.launch(
-                                                    Dispatchers.IO
-                                                ) {
-                                                    val list = getList()
-                                                    list.firstOrNull()?.let {
-                                                        //imageUri = it
-                                                    }
+                                    mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
+                                        type = MediaType.Image,
+                                        allowMultiple = false,
+                                        fromGalleryType = FromGalleryType.VisualMediaPicker,
+                                        cropParams =
+                                        MediaPickerCropParams.Enabled(
+                                            showAspectRatioSelectionButton = false,
+                                            showShapeCropButton = false,
+                                            lockAspectRatio = AspectRatio(1, 1)
+                                        ),
+                                        callback = { getList ->
+                                            scope.launch(
+                                                Dispatchers.IO
+                                            ) {
+                                                val list = getList()
+                                                list.firstOrNull()?.let {
+                                                    //imageUri = it
                                                 }
                                             }
-                                        )
+                                        }
+                                    )
                                 },
                         )
                     }
 
                     Spacer(modifier = Modifier.height(50.dp))
-
 
                     Column(
                         modifier = Modifier
@@ -156,7 +155,7 @@ fun UserProfileScreen(navHostController: NavHostController, viewModel: UserProfi
                                             )
 
                                             viewModel.updateUserData(updatedUser)
-                                            Toast.makeText(context, "$userName", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, userName, Toast.LENGTH_SHORT).show()
 
                                         }
                                     })
@@ -203,6 +202,7 @@ fun UserProfileScreen(navHostController: NavHostController, viewModel: UserProfi
                     }
                 }
             }else{
+
 
             }
         }

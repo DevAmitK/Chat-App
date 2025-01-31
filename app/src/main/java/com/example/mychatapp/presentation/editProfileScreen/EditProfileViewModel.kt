@@ -6,11 +6,16 @@ import com.example.mychatapp.domain.local.repo.PreferenceRepo
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.example.mychatapp.domain.remote.UserRepo
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.load
 import com.streamliners.base.taskState.taskStateOf
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -18,11 +23,13 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val preferenceRepo: PreferenceRepo,
     private val userRepo: UserRepo,
-    private val storageRepo: StorageRepo
+    private val storageRepo: StorageRepo,
 ) : BaseViewModel() {
+    private val _userState = MutableStateFlow<User?>(null)
+    val userState: StateFlow<User?> = _userState.asStateFlow()
 
     val saveProfileTask = taskStateOf<Unit>()
-
+    val user = taskStateOf<User?>()
 
     fun saveUser(
         user: User,
@@ -40,4 +47,19 @@ class EditProfileViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun loadUser(){
+        execute {
+            val userEmail = Firebase.auth.currentUser?.email
+                if (userEmail != null) {
+                   _userState.value = userRepo.getUserWithEmail(userEmail)
+                }else{
+                    null
+                }
+            }
+        }
+
+
 }
+

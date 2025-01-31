@@ -23,7 +23,7 @@ fun ChannelList(listOfChannel: List<Channel>, navHostController: NavHostControll
     ) {
 
         if (listOfChannel.isEmpty()) {
-            item() {
+            item {
                 CenterText(text = "Empty...")
             }
         } else {

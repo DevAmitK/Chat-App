@@ -18,7 +18,7 @@ import com.streamliners.utils.DateTimeUtils
 
 
 @Composable
-fun MassageCard(massage: Message,) {
+fun MassageCard(massage: Message) {
     Card{
         Row(
             modifier = Modifier

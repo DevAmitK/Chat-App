@@ -16,7 +16,7 @@ fun CustomSnackBar(
     actionLabel: String? = null,
     onActionClicked: (() -> Unit)? = null,
 ) {
-    // Create a SnackbarHostState to show the Snackbar
+
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current

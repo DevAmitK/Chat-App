@@ -32,7 +32,7 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
     TitleBarScaffold(title = "Chats", actions = {
         Icon(imageVector = Icons.Rounded.AccountCircle, contentDescription = null,
             modifier = Modifier.clickable {
-                navHostController.navigate(Routes.UserProfileScreen)
+                navHostController.navigate(Routes.EditProfileScreen)
             })
     }) {
         Box(modifier = Modifier

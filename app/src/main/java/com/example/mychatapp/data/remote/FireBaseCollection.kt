@@ -1,7 +1,6 @@
 package com.example.mychatapp.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageReference
 
 object FireBaseCollection {
     fun FirebaseFirestore.userCollection () =  collection("users")

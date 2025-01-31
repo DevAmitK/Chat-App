@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.domain.ext.id
@@ -26,7 +25,6 @@ fun NewChatScreen(
     chatViewModel: NewChatViewModel,
     navHostController: NavHostController,
 ) {
-    val context = LocalContext.current
     LaunchedEffect(key1 = Unit) {
         chatViewModel.fetchUsers()
     }
@@ -40,8 +38,8 @@ fun NewChatScreen(
                 contentPadding = PaddingValues(10.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                if (userList.isNullOrEmpty()) {
-                   item(){
+                if (userList.isEmpty()) {
+                   item{
                        CenterText(text = "Empty...")
                    }
                 } else {

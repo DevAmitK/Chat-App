@@ -16,10 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
 import com.example.mychatapp.ui.theme.SplashScreenGradient
@@ -29,7 +27,6 @@ fun SplashScreen(
     navHostController: NavHostController,
     viewModel: SplashViewModel,
 ) {
-    val context = LocalContext.current
     val scale = remember { Animatable(1f) } // Start scale at 1f
 
     // Launch the animation effect

@@ -26,6 +26,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,14 +72,17 @@ fun EditProfileScreen(
 
     // ViewModel states
     var name by remember { mutableStateOf(auth.currentUser?.displayName.orEmpty()) }
-    val email by remember { mutableStateOf(auth.currentUser?.email.orEmpty()) }
+    var email by remember { mutableStateOf(auth.currentUser?.email.orEmpty()) }
     var bio by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
     var bioError by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<PickedMedia?>(null) }
+    var imageUriString by remember { mutableStateOf<String?>(null) }
     var selectedGender by remember { mutableStateOf<User.Gender?>(null) }
     var userUidNotFound by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    val userData by viewModel.userState.collectAsState()
 
     // Gender options
     val genderOptions = User.Gender.entries.map { it.name }
@@ -87,6 +91,9 @@ fun EditProfileScreen(
     // Check if user is authenticated
     LaunchedEffect(Unit) {
         userUidNotFound = auth.currentUser?.uid.isNullOrEmpty()
+    }
+    LaunchedEffect(key1 = Unit) {
+        viewModel.loadUser()
     }
 
     // Show dialog if user UID is not found
@@ -109,6 +116,16 @@ fun EditProfileScreen(
     }
 
     TitleBarScaffold(title = "Edit Profile") { padding ->
+        LaunchedEffect(key1 = userData) {
+            userData?.let {
+                name = it.name
+                bio = it.bio ?: ""
+                email = it.email
+                selectedGender = it.gender
+                imageUriString = it.imageUri
+            }
+        }
+
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(padding)
@@ -125,6 +142,7 @@ fun EditProfileScreen(
                 Card {
                     ProfileImagePicker(
                         defaultIconResId = R.drawable.person_24,
+                        imageUri = imageUriString,
                         imagePickMedia = imageUri
                     ) {
                         mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(

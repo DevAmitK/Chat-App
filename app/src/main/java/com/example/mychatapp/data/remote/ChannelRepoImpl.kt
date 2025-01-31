@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ChannelRepoImpl @Inject constructor(
-    val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore
 ) : ChannelRepo {
 
     override suspend fun getOneToOneChat(

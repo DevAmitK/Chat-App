@@ -2,9 +2,10 @@ package com.example.mychatapp.presentation.chatScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -13,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.LoadingCPI
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.base.taskState.comp.whenLoading
@@ -30,17 +30,20 @@ fun ChatScreen(
     channelId: String,
     viewModel: ChatViewModel,
 ) {
+
     LaunchedEffect(key1 = Unit) {
         viewModel.start(channelId)
     }
 
     TitleBarScaffold(title = "Chat",navigateUp = {
         navHostController.navigateUp()
-    }) {
+    }) { paddingValue ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .imePadding()
+                .padding(paddingValue)
+
         ) {
 
             val massageInput = remember {
@@ -55,7 +58,7 @@ fun ChatScreen(
                     LoadingCPI(modifier = Modifier.fillMaxSize())
                 }
                 viewModel.channel.whenLoaded {
-                    if (!it.messages.isNullOrEmpty()){
+                    if (it.messages.isNotEmpty()) {
                         MassageList(it)
                     }else{
                         CenterText(text = "Chat Is Empty")
@@ -72,10 +75,23 @@ fun ChatScreen(
                             })
                         }
                     }) {
-                        Icon(imageVector = Icons.Default.Send, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = null
+                        )
                     }
                 }
             )
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

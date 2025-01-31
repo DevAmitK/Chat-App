@@ -12,6 +12,7 @@ import com.streamliners.base.taskState.taskStateOf
 class UserProfileViewModel(
     private val repo: UserRepo
 ) : BaseViewModel(){
+
     val user = taskStateOf<User?>()
     fun getUser(){
         execute {

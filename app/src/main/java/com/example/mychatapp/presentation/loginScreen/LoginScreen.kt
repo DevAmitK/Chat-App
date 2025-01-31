@@ -81,7 +81,7 @@ fun LoginScreen(
     }
     if (showDialog) {
         CustomDialog(
-            showDialog = showDialog,
+            showDialog = true,
             title = "User Not Found",
             message = "$showDialogErrorMessage , click Go To Login Page ",
             confirmButtonText = "Go To Login Page",
