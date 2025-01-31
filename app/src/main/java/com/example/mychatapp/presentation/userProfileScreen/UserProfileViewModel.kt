@@ -32,7 +32,4 @@ class UserProfileViewModel(
             repo.saveUserData(user)
         }
     }
-
-
-
 }

@@ -201,7 +201,6 @@ fun EditProfileScreen(
                     },
                     enabled = false
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Bio input
