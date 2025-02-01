@@ -87,9 +87,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+
+//Firebase
     implementation (libs.google.firebase.auth)
     implementation (libs.firebase.bom)
     implementation (libs.firebase.ui.auth)
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
+    //GoogleSignIn
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+
 
 
     // Navigation
@@ -101,8 +107,7 @@ dependencies {
    // PreferencesDataStore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
-    //GoogleSignIn
-    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+
 
     // Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
@@ -118,9 +123,11 @@ dependencies {
     // DroidLibs base dependencies add
     implementation(libs.base)
     implementation(libs.compose.android)
-    implementation("com.github.The-Streamliners.DroidLibs:compose:1.2.14")
-    implementation("com.github.The-Streamliners.DroidLibs:utils:1.2.14")
-    implementation("com.github.The-Streamliners.DroidLibs:pickers:1.2.18")
+    implementation(libs.compose)
+    implementation(libs.utils)
+    implementation(libs.pickers)
+    implementation(libs.helpers)
+
 
     // Koin for Android
     implementation(libs.koin.android)

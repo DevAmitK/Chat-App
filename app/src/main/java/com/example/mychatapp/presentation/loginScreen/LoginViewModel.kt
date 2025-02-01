@@ -4,6 +4,8 @@ import androidx.navigation.NavHostController
 import com.example.mychatapp.domain.local.repo.PreferenceRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.presentation.navigation.Routes
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.ext.executeOnMain
@@ -28,7 +30,6 @@ class LoginViewModel @Inject constructor(
             val user = repo.getUserWithEmail(email)
 
             executeOnMain {
-
                 if (user != null) {
                     preferenceRepo.saveLoginState(true) // Save login state
                     navHostController.navigate(Routes.HomeScreen) {

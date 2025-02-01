@@ -28,6 +28,7 @@ import com.example.mychatapp.ui.theme.floatingActionButton
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.base.taskState.comp.whenLoading
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
+import com.streamliners.helpers.NotificationHelper
 
 @Composable
 fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
@@ -74,5 +75,7 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
 
         }
     }
+    NotificationHelper.PermissionsSetup()
+
 }
 
