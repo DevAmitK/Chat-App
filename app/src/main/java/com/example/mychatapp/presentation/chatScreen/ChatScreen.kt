@@ -54,11 +54,11 @@ fun ChatScreen(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                viewModel.channel.whenLoading {
+                viewModel.data.whenLoading {
                     LoadingCPI(modifier = Modifier.fillMaxSize())
                 }
-                viewModel.channel.whenLoaded {
-                    if (it.messages.isNotEmpty()) {
+                viewModel.data.whenLoaded {
+                    if ( it.channel.messages.isNotEmpty()) {
                         MassageList(it)
                     }else{
                         CenterText(text = "Chat Is Empty")

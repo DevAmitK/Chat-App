@@ -18,7 +18,7 @@ import com.streamliners.utils.DateTimeUtils
 
 
 @Composable
-fun MassageCard(massage: Message) {
+fun MassageCard(massage: Message,time : String) {
     Card{
         Row(
             modifier = Modifier
@@ -30,16 +30,8 @@ fun MassageCard(massage: Message) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black
             )
-            val formattedTime = remember {
-                derivedStateOf {
-                    DateTimeUtils.formatTime(
-                        DateTimeUtils.Format.HOUR_MIN_12,
-                        massage.time.toDate().time
-                    )
-                }
-            }
             Text(
-                text = formattedTime.value,
+                text = time,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.DarkGray
             )
