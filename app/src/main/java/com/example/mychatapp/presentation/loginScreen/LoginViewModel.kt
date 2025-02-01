@@ -29,6 +29,9 @@ class LoginViewModel @Inject constructor(
         execute (showLoadingDialog = false){
             val user = repo.getUserWithEmail(email)
 
+            //Subscribe to FCM topic
+            Firebase.messaging.subscribeToTopic("general")
+
             executeOnMain {
                 if (user != null) {
                     preferenceRepo.saveLoginState(true) // Save login state

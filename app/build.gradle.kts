@@ -125,8 +125,8 @@ dependencies {
     implementation(libs.compose.android)
     implementation(libs.compose)
     implementation(libs.utils)
-    implementation(libs.pickers)
-    implementation(libs.helpers)
+    implementation("com.github.The-Streamliners.DroidLibs:pickers:1.2.19")
+    implementation("com.github.The-Streamliners.DroidLibs:helpers:1.2.19")
 
 
     // Koin for Android

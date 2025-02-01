@@ -33,7 +33,6 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-helpers = { module = "com.github.The-Streamliners.DroidLibs:helpers", version.ref = "base" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -53,7 +52,6 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-android-v353 = { module = "io.insert-koin:koin-android", version.ref = "koinAndroidVersion" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-pickers = { module = "com.github.The-Streamliners.DroidLibs:pickers", version.ref = "base" }
 utils = { module = "com.github.The-Streamliners.DroidLibs:utils", version.ref = "base" }
 
 [plugins]
