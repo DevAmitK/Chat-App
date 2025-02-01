@@ -11,15 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DarkPrimaryColour,
+    secondary = DarkSeconduryColour,
+    tertiary = DarkTertiary,
+    onSecondary = DarkText,
+    onTertiary = DarkCardColour
+
+
+
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = LightPrimaryColour,
+    secondary = LightSeconduryColour,
+    tertiary = LightTertiary,
+    onSecondary = LightText,
+    onTertiary = LightCardColour
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -51,6 +58,21 @@ fun MyChatTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+
+@Composable
+fun MyChatAppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(), // Automatically adapts
+    content: @Composable () -> Unit,
+) {
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+
+    MaterialTheme(
+        colorScheme = colors,
         typography = Typography,
         content = content
     )

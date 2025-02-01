@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.mychatapp.presentation.navigation.NavHostGraph
+import com.example.mychatapp.ui.theme.MyChatAppTheme
 import com.example.mychatapp.ui.theme.MyChatTheme
 import com.streamliners.base.BaseActivity
 import com.streamliners.base.uiEvent.UiEventDialogs
@@ -17,7 +18,7 @@ class MainActivity: BaseActivity(){
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyChatTheme {
+            MyChatAppTheme {
 
                 UiEventDialogs()
                 NavHostGraph()

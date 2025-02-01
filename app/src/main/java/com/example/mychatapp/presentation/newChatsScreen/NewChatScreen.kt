@@ -1,11 +1,14 @@
 package com.example.mychatapp.presentation.newChatsScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -31,37 +34,41 @@ fun NewChatScreen(
     TitleBarScaffold(title = "New Chat", navigateUp = {
         navHostController.navigateUp()
     }) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondary)) {
 
-        chatViewModel.usersListTask.whenLoaded { userList ->
-            LazyColumn(
-                modifier = Modifier.padding(it),
-                contentPadding = PaddingValues(10.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                if (userList.isEmpty()) {
-                   item{
-                       CenterText(text = "Empty...")
-                   }
-                } else {
-                items(userList) { user ->
-                    UserCard(
-                        user = user,
-                        onClick = {
-                            chatViewModel.onUserSelected(
-                                otherUserId = user.id(),
-                                onChannelReady = {
-                                    navHostController.navigate(Routes.ChatScreen(it))
+            chatViewModel.usersListTask.whenLoaded { userList ->
+                LazyColumn(
+                    modifier = Modifier.padding(it),
+                    contentPadding = PaddingValues(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    if (userList.isEmpty()) {
+                        item {
+                            CenterText(text = "Empty...")
+                        }
+                    } else {
+                        items(userList) { user ->
+                            UserCard(
+                                user = user,
+                                onClick = {
+                                    chatViewModel.onUserSelected(
+                                        otherUserId = user.id(),
+                                        onChannelReady = {
+                                            navHostController.navigate(Routes.ChatScreen(it))
+                                        }
+                                    )
                                 }
                             )
                         }
-                    )
-                }
+                    }
                 }
             }
-        }
-        chatViewModel.usersListTask.whenLoading {
-            LoadingCPI(modifier = Modifier.fillMaxSize())
+            chatViewModel.usersListTask.whenLoading {
+                LoadingCPI(modifier = Modifier.fillMaxSize())
+            }
         }
     }
-}
 
+}

@@ -2,11 +2,14 @@ package com.example.mychatapp.presentation.loginScreen
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.background
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +36,9 @@ fun SignInWithGoogleButton(
 
     Button(
         modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+        ),
         onClick = {
             val providers = arrayListOf(
                 AuthUI.IdpConfig.GoogleBuilder().build()
@@ -47,6 +53,7 @@ fun SignInWithGoogleButton(
     ) {
         Text(
             text = "Sing-in with Google",
+            color = MaterialTheme.colorScheme.onSecondary,
             style = MaterialTheme.typography.bodyLarge
         )
     }

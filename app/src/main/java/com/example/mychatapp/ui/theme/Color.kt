@@ -3,25 +3,27 @@ package com.example.mychatapp.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val  LightPrimaryColour = Color(0xFF017B6B)
+val  LightSeconduryColour = Color(0xFF96DED4)
+val  LightTertiary =  Color(0xFFDDD5CE)
+val  LightText =  Color(0xFF000000)
+val  LightCardColour =  Color(0xFFE8F7DE)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
 
-val customColour = Color(0xFF445EFF)
+val  DarkPrimaryColour = Color(0xFF30414C)
+val  DarkSeconduryColour = Color(0xFF4B5D68)
+val  DarkTertiary =  Color(0xFF0E1E26)
+val  DarkText =  Color(0xFFFBFCFB)
+val  DarkCardColour =  Color(0xFF475660)
 
-val seconduryColour = Color(0xFF6E008A)
-val primaryColour = Color(0xFF150099)
-val lightBlue = Color(0xFF91BFF7)
+val  floatingActionButton = Color(0xFF45EB07)
 
 val grayTransparent = Color(0x66141313)
 
 val SplashScreenGradient = Brush.linearGradient(
     listOf(
-        primaryColour,
-        seconduryColour
+        LightPrimaryColour,
+        LightPrimaryColour,
+        DarkSeconduryColour
     )
 )

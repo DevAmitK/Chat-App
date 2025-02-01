@@ -1,6 +1,7 @@
 package com.example.mychatapp.presentation.editProfileScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +51,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.mr0xf00.easycrop.AspectRatio
-import com.mr0xf00.easycrop.rememberImageCropper
 import com.streamliners.base.taskState.comp.whenLoading
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 import com.streamliners.pickers.media.FromGalleryType
@@ -128,6 +129,7 @@ fun EditProfileScreen(
 
         Box(modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(padding)
         ) {
             Column(
@@ -252,7 +254,7 @@ fun EditProfileScreen(
                             Text(
                                 text = genderName,
                                 modifier = Modifier.padding(start = 8.dp),
-                                color = if (selectedGender?.name == genderName) Color.Cyan else Color.Black
+                                color = if (selectedGender?.name == genderName) MaterialTheme.colorScheme.onSecondary else Color.Black
                             )
                         }
                     }
@@ -264,7 +266,7 @@ fun EditProfileScreen(
                 // Save button
                 ElevatedButton(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.elevatedButtonColors(containerColor = Color.Cyan),
+                    colors = ButtonDefaults.elevatedButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
                         if (name.isNotBlank()) {
                             val user = User(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,11 @@ import com.streamliners.utils.DateTimeUtils
 
 @Composable
 fun MassageCard(massage: Message,time : String) {
-    Card{
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onTertiary
+        )
+    ){
         Row(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp),
@@ -28,12 +33,12 @@ fun MassageCard(massage: Message,time : String) {
             Text(
                 text = massage.message,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = time,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.DarkGray
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     }
