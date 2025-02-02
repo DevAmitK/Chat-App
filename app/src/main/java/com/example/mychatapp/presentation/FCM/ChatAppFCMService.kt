@@ -13,7 +13,7 @@ class ChatAppFCMService : FirebaseMessagingService() {
         val notificationParams = message.notification ?: return
         val title = notificationParams.title ?: return
         val body = notificationParams.body ?: return
-        shNotification(title, body)
+        showNotification(title, body)
 
         val data = message.data
         loadData(data)
@@ -27,7 +27,7 @@ class ChatAppFCMService : FirebaseMessagingService() {
 
     }
 
-    private fun shNotification(title: String, body: String) {
+    private fun showNotification(title: String, body: String) {
         NotificationHelper(this)
             .showNotification(
                 title = title,
