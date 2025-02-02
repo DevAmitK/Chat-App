@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MassageList(data: ChatViewModel.Data) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+       // modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(data.chatListItems) { chatListItem ->
@@ -40,10 +40,10 @@ fun MassageList(data: ChatViewModel.Data) {
 
                     }
                     is ChatViewModel.ChatListItem.ReceivedMessage -> {
-                        MassageCard(massage = chatListItem.message, time = chatListItem.time)
+                        MessageCard(message = chatListItem.message, time = chatListItem.time)
                     }
                     is ChatViewModel.ChatListItem.SentMessages -> {
-                        MassageCard(massage = chatListItem.message, time = chatListItem.time)
+                        MessageCard(message = chatListItem.message, time = chatListItem.time)
                     }
                 }
             }

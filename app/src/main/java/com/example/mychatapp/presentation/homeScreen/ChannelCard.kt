@@ -18,13 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.presentation.navigation.Routes
-import com.example.mychatapp.ui.comp.AsyncImages
+import com.example.mychatapp.ui.comp.AsyncImage
 
 @Composable
 fun ChannelCard(channel: Channel, navHostController: NavHostController) {
@@ -43,7 +42,7 @@ fun ChannelCard(channel: Channel, navHostController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImages(
+                AsyncImage(
                     uri = channel.imageUrl!!,
 
                     modifier = Modifier

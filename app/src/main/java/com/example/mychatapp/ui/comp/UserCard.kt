@@ -46,7 +46,7 @@ fun UserCard(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImages(
+                AsyncImage(
                     uri = user.imageUri ?: placeHolder(user.name),
                     modifier = Modifier
                         .size(50.dp)

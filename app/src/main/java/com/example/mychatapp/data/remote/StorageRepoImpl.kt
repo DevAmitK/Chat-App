@@ -1,6 +1,7 @@
 package com.example.mychatapp.data.remote
 
 import android.net.Uri
+import android.util.Log
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
@@ -8,6 +9,8 @@ import kotlinx.coroutines.tasks.await
 
 class StorageRepoImpl : StorageRepo {
     override suspend fun uploadFile(path: String, uri: Uri): String {
+        Log.d("ImageUrlCheck", "$path uploadFile: $uri")
+
         return try {
             // Get the reference to the file location in Firebase Storage
             val storageReference = Firebase.storage.getReference(path)

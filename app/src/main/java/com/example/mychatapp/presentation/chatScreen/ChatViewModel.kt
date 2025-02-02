@@ -1,9 +1,14 @@
 package com.example.mychatapp.presentation.chatScreen
 
+import androidx.core.net.toUri
+import coil3.Uri
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.Message
 import com.example.mychatapp.domain.remote.ChannelRepo
+import com.example.mychatapp.domain.remote.StorageRepo
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
@@ -14,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val repo: ChannelRepo,
+    private val storageRepo: StorageRepo,
 ) : BaseViewModel() {
 
 
@@ -52,7 +58,10 @@ class ChatViewModel(
 
     }
 
-    fun sendMessage(messageStr: String, channelId: String, onSuccess :() ->Unit) {
+    fun sendMessage(
+        messageStr: String,
+        channelId: String,
+        onSuccess :() ->Unit) {
         val message = Message(
             message = messageStr,
             sender = currentUserId(),
@@ -66,7 +75,10 @@ class ChatViewModel(
     }
 
 
-    private fun createChatListItems(channel: Channel, currentUser: String): List<ChatListItem> {
+    private fun createChatListItems(
+        channel: Channel,
+        currentUser: String
+    ): List<ChatListItem> {
 
         return buildList {
             var previousDate = ""
@@ -95,6 +107,22 @@ class ChatViewModel(
                 }
                 add(chatListItem)
             }
+        }
+    }
+
+    fun sendImage(uri: String,channelId:String){
+        val email = Firebase.auth.currentUser!!.email
+        val timestamp = System.currentTimeMillis()
+        execute {
+           val imageUrl = storageRepo.uploadFile("media/${timestamp}",uri.toUri())
+
+            val message = Message(
+                message = "",
+                sender = currentUserId(),
+                mediaUrl = imageUrl
+            )
+            repo.sendMassage(channelId = channelId, message =message)
+
         }
     }
 }
