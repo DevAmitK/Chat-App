@@ -1,13 +1,17 @@
 package com.example.mychatapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.mychatapp.presentation.navigation.NavHostGraph
 import com.example.mychatapp.ui.theme.MyChatAppTheme
 import com.example.mychatapp.ui.theme.MyChatTheme
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseActivity
 import com.streamliners.base.uiEvent.UiEventDialogs
+import kotlinx.coroutines.tasks.await
 
 
 class MainActivity: BaseActivity(){
@@ -22,6 +26,11 @@ class MainActivity: BaseActivity(){
 
                 UiEventDialogs()
                 NavHostGraph()
+
+//                execute {
+//                    val token = Firebase.messaging.token.await()
+//                    Log.d("ChatAppDebugToken", "onCreate: $token")
+//                }
 
 
             }
