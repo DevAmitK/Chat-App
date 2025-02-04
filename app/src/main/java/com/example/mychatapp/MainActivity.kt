@@ -27,12 +27,6 @@ class MainActivity: BaseActivity(){
                 UiEventDialogs()
                 NavHostGraph()
 
-//                execute {
-//                    val token = Firebase.messaging.token.await()
-//                    Log.d("ChatAppDebugToken", "onCreate: $token")
-//                }
-
-
             }
         }
     }

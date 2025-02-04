@@ -2,12 +2,13 @@ package com.example.mychatapp.presentation.editProfileScreen
 
 import androidx.core.net.toUri
 import com.example.mychatapp.domain.ext.currentUserId
-import com.example.mychatapp.domain.local.repo.PreferenceRepo
+import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.load
@@ -16,12 +17,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 class EditProfileViewModel @Inject constructor(
-    private val preferenceRepo: PreferenceRepo,
+    private val preferenceRepo: LocalRepo,
     private val userRepo: UserRepo,
     private val storageRepo: StorageRepo,
 ) : BaseViewModel() {
@@ -37,9 +39,19 @@ class EditProfileViewModel @Inject constructor(
     ) {
         execute(showLoadingDialog = false) {
             saveProfileTask.load {
+
+                //update Firebase Token
+                val token = Firebase.messaging.token.await()
+
                 val imageUrl =   user.imageUri?.toUri()?.let { storageRepo.uploadFile("profileImages/${currentUserId()}", it) }
-                val updatedUser = user.copy(imageUri = imageUrl)
+                val updatedUser = user.copy(
+                    imageUri = imageUrl,
+                    fcmToken = token
+                )
                 userRepo.saveUserData(user = updatedUser)
+
+                //TODO User Save in Local
+
                 preferenceRepo.saveLoginState(true)
                 withContext(Dispatchers.Main) {
                     onSuccess()

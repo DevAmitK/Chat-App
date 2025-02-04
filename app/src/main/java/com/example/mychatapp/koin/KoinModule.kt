@@ -2,7 +2,7 @@ package com.example.mychatapp.koin
 
 
 import com.example.mychatapp.data.local.DataStoreUtil
-import com.example.mychatapp.domain.local.repo.PreferenceRepo
+import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.data.local.repoimpl.PreferenceRepoImpl
 import com.example.mychatapp.data.remote.ChannelRepoImpl
 import com.example.mychatapp.data.remote.OtherRepoImpl
@@ -35,7 +35,7 @@ import org.koin.dsl.module
 val appModule = module {
 
     single { DataStoreUtil.create(get()) }
-    single<PreferenceRepo> { PreferenceRepoImpl(get()) }
+    single<LocalRepo> { PreferenceRepoImpl(get()) }
     single<FirebaseAuth> { Firebase.auth }
     single<FirebaseFirestore> { Firebase.firestore }
     single<UserRepo> { UserRepoImpl(get()) }

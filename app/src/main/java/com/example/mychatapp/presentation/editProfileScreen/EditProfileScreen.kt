@@ -268,6 +268,12 @@ fun EditProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
+                        /**
+                         * TODO After creating the profile, when I am
+                         * going to edit the profile, if I do not change
+                         * the photo while saving, then the photo is showing
+                         * NULL
+                         */
                         if (name.isNotBlank()) {
                             val user = User(
                                 id = currentUserId(),
@@ -275,7 +281,8 @@ fun EditProfileScreen(
                                 email = email,
                                 bio = bio.takeIf { it.isNotBlank() },
                                 gender = selectedGender,
-                                imageUri = imageUri?.uri
+                                imageUri = imageUri?.uri,
+                                fcmToken = null
                             )
 
                             viewModel.saveUser(

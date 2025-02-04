@@ -7,7 +7,9 @@ data class User(
     val email: String,
     val bio: String?,
     val gender: Gender?,
-    val imageUri: String? = null
+    val imageUri: String?,
+    val fcmToken : String ?
+
 ) {
     // Secondary constructor with specific default values
     constructor() : this(
@@ -16,7 +18,8 @@ data class User(
         email = "",
         bio = "",
         gender = null,
-        imageUri = null
+        imageUri = null,
+        fcmToken = null
     )
     enum class Gender {
         MALE,
