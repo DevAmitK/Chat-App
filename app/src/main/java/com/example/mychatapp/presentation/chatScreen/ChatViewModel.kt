@@ -2,11 +2,13 @@ package com.example.mychatapp.presentation.chatScreen
 
 import androidx.core.net.toUri
 import coil3.Uri
+import com.example.mychatapp.data.remote.OtherRepoImpl
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.Message
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
+import com.example.mychatapp.domain.usecase.NewMessageNotifier
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.streamliners.base.BaseViewModel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val repo: ChannelRepo,
     private val storageRepo: StorageRepo,
+    private val newMessageNotifier: NewMessageNotifier
 ) : BaseViewModel() {
 
 
@@ -70,6 +73,7 @@ class ChatViewModel(
 
         execute(showLoadingDialog = false) {
             repo.sendMassage(channelId = channelId, message =message)
+            newMessageNotifier.notify()
             onSuccess()
         }
     }

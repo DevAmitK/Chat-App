@@ -9,6 +9,7 @@ plugins {
 
     kotlin("plugin.serialization") version "2.0.0"
 
+
 }
 
 android {
@@ -60,6 +61,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/DEPENDENCIES"
         }
     }
     buildToolsVersion = "35.0.0"
@@ -95,6 +98,18 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging:24.1.0")
     //GoogleSignIn
     implementation ("com.google.android.gms:play-services-auth:20.5.0")
+
+    //implementation("com.google.auth:google-auth-library-oauth2-http:1.32.1")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
+
+    implementation("com.google.firebase:firebase-firestore")
+
+    implementation ("com.google.android.gms:play-services-base:18.2.0")
+
+    // Ensure gRPC dependencies are included
+    implementation("io.grpc:grpc-okhttp:1.58.0")
+
+
 
 
 
@@ -137,6 +152,8 @@ dependencies {
     implementation ("io.insert-koin:koin-androidx-compose:3.4.0" ) // or latest version
     //implementation( "io.insert-koin:koin-core:3.4.0")
 
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-client-cio:3.0.3")
 
 
 }
