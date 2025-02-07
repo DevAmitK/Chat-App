@@ -46,7 +46,7 @@ val appModule = module {
 
     single { HttpClient(CIO){expectSuccess = true} }
     single { FcmSender(get()) }
-    single { NewMessageNotifier(get(),get()) }
+    single { NewMessageNotifier(get(),get(),get()) }
 
 
 }
@@ -58,7 +58,7 @@ val viewModel = module {
     viewModel { NewChatViewModel(get (),get()) }
     viewModel { SplashViewModel(get ()) }
     viewModel { HomeViewModel(get (),get()) }
-    viewModel { ChatViewModel(get (),get(),get()) }
+    viewModel { ChatViewModel(get (),get(),get(),get()) }
     viewModel { UserProfileViewModel(get ()) }
 
 }

@@ -1,27 +1,31 @@
 package com.example.mychatapp.domain.usecase
 
-import android.util.Log
 import com.example.mychatapp.domain.remote.OtherRepo
+import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.helper.fcm.AndroidPayload
 import com.example.mychatapp.helper.fcm.FcmMessage
 import com.example.mychatapp.helper.fcm.FcmPayload
 import com.example.mychatapp.helper.fcm.FcmSender
 import com.example.mychatapp.helper.fcm.NotificationPayload
 
-class NewMessageNotifier (
+class NewMessageNotifier(
     private val otherRepo: OtherRepo,
-    private val fcmSender: FcmSender
+    private val fcmSender: FcmSender,
+    private val userRepo: UserRepo,
 ){
-suspend fun notify(){
+    suspend fun notify(
+        userId: String,
+        userName: String,
+        message: String,
+    ) {
     val scvAcJson = otherRepo.getServiceAccountJson()
-    Log.d("scvAcPayload", "notify: $scvAcJson")
-
+        val token = userRepo.getUserById(id = userId).fcmToken ?: return
       val payload = FcmPayload(
-            FcmMessage.forTopic(
-                topic = "general",
+          FcmMessage.forToken(
+              token = token,
                 notification = NotificationPayload(
-                    title = "Chat App General Message",
-                    body = "Hi I am Amit"
+                    title = userName,
+                    body = message
                 ),
                 android = AndroidPayload(
                     priority = "high"

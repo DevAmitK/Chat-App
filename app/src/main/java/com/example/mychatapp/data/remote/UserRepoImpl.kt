@@ -36,6 +36,15 @@ class UserRepoImpl @Inject constructor(
             .firstOrNull()
     }
 
+    override suspend fun getUserById(id: String): User{
+        return firestore.userCollection()
+            .document(id)
+            .get()
+            .await()
+            .toObject(User::class.java)
+            ?: error("No User Found In With Id $id")
+    }
+
     override suspend fun getAllUser(): List<User> {
         return firestore.userCollection()
             .get()

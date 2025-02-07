@@ -1,13 +1,13 @@
 package com.example.mychatapp.presentation.chatScreen
 
 import androidx.core.net.toUri
-import coil3.Uri
-import com.example.mychatapp.data.remote.OtherRepoImpl
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.Message
+import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
+import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.domain.usecase.NewMessageNotifier
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -15,6 +15,7 @@ import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.base.taskState.update
+import com.streamliners.base.taskState.value
 import com.streamliners.utils.DateTimeUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val repo: ChannelRepo,
     private val storageRepo: StorageRepo,
+    private val userRepo: UserRepo,
     private val newMessageNotifier: NewMessageNotifier
 ) : BaseViewModel() {
 
@@ -42,6 +44,7 @@ class ChatViewModel(
 
     data class Data(
         val channel: Channel,
+        val user: User,
         val chatListItems: List<ChatListItem>,
     )
 
@@ -51,9 +54,11 @@ class ChatViewModel(
         execute(
             showLoadingDialog = false
         ) {
+            //TODO Replace get firebase user to Local user
+            val user =userRepo.getUserById(currentUserId())
             launch {
                 repo.getChannelWithFlowMessage(channelId).collectLatest {
-                    data.update(Data(it,createChatListItems(it, currentUserId())))
+                    data.update(Data(it,user,createChatListItems(it, currentUserId())))
                 }
             }
 
@@ -73,8 +78,27 @@ class ChatViewModel(
 
         execute(showLoadingDialog = false) {
             repo.sendMassage(channelId = channelId, message =message)
-            newMessageNotifier.notify()
+            notifyOtherUser(messageStr)
             onSuccess()
+        }
+    }
+
+    private fun notifyOtherUser(messageString: String) {
+        val channel = data.value().channel
+        val user = data.value().user
+        if (channel.type == Channel.Type.OneToOne) {
+            val otherUser = channel.members.find {
+                it != currentUserId()
+            } ?: error("Other User Not found")
+
+
+            execute {
+                newMessageNotifier.notify(
+                    message = messageString,
+                    userId =otherUser,
+                    userName =user.name
+                )
+            }
         }
     }
 
@@ -126,6 +150,7 @@ class ChatViewModel(
                 mediaUrl = imageUrl
             )
             repo.sendMassage(channelId = channelId, message =message)
+            notifyOtherUser("Send An Image ")
 
         }
     }
