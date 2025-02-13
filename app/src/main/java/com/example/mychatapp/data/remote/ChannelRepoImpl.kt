@@ -6,6 +6,7 @@ import com.example.mychatapp.domain.model.Message
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -32,7 +33,9 @@ class ChannelRepoImpl @Inject constructor(
             }
     }
 
-    override suspend fun createOneToOneChannel(currentUserId: String, otherUserId: String): String {
+    override suspend fun createOneToOneChannel(
+        currentUserId: String, otherUserId: String
+    ): String {
 
         val culRef = firestore.userChannel()
         val id = culRef.document().id
@@ -54,7 +57,6 @@ class ChannelRepoImpl @Inject constructor(
 
     override suspend fun getAllChannels(currentUser: String): List<Channel> {
         return firestore.userChannel()
-            .whereEqualTo(Channel::type.name, Channel.Type.OneToOne)
             .whereArrayContains(Channel::members.name, currentUser)
             .get()
             .await()
@@ -83,6 +85,32 @@ class ChannelRepoImpl @Inject constructor(
                 }
             awaitClose()
         }
+
+    override suspend fun createGroupChannel(
+        currentUserId: String,
+        name: String,
+        description: String,
+        groupImage: String?,
+        members: List<String>,
+    ): String {
+
+        val culRef = firestore.userChannel()
+        val id = culRef.document().id
+
+        culRef.document(id).set(
+            Channel(
+                imageUrl = groupImage,
+                name = name,
+                type = Channel.Type.Group,
+                description =description,
+                members = members+currentUserId,
+                messages = emptyList(),
+            )
+
+        ).await()
+
+        return id
+    }
 
     override suspend fun sendMassage(channelId: String, message: Message) {
         firestore.userChannel()

@@ -2,6 +2,7 @@ package com.example.mychatapp.domain.remote
 
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.Message
+import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepo {
@@ -11,4 +12,6 @@ interface ChannelRepo {
     suspend fun getChannel(channelId :String) : Channel
     suspend fun sendMassage(channelId: String ,message : Message)
     suspend fun getChannelWithFlowMessage(channelId: String) : Flow<Channel>
+    suspend fun createGroupChannel(currentUserId: String, name: String, description: String, groupImage : String?, members : List<String>,): String
+
 }

@@ -18,44 +18,52 @@ import com.example.mychatapp.ui.comp.AsyncImage
 
 
 @Composable
-fun MessageCard(message: Message, time : String) {
-    Card(
+fun MessageCard(message: Message, time : String,senderName : String? = null) {
 
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onTertiary
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+    Column {
+        senderName?.let {
+            Text(
+                text = "$senderName",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+        }
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.onTertiary
+            )
         ) {
-
-            message.mediaUrl?.let {
-                AsyncImage(
-                    uri = it,
-                    modifier = Modifier.widthIn(max = 220.dp, min = 100.dp),
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
-                Text(
-                    modifier = Modifier ,
-                    text = message.message,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSecondary
-                )
-                Text(
-                    modifier = Modifier.align(Alignment.Bottom),
-                    text = time,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSecondary
-                )
+
+                message.mediaUrl?.let {
+                    AsyncImage(
+                        uri = it,
+                        modifier = Modifier.widthIn(max = 220.dp, min = 100.dp),
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = message.message,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                    Text(
+                        modifier = Modifier.align(Alignment.Bottom),
+                        text = time,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
             }
         }
     }
-
 }
 
 

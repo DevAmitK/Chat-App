@@ -11,7 +11,7 @@ import coil3.compose.SubcomposeAsyncImage
 fun AsyncImage(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    uri : String,
+    uri : String?,
     contentScale : ContentScale? = null,
     contentDescription: String? = null
 ) {

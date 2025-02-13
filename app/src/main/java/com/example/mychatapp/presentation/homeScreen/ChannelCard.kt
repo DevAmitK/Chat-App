@@ -43,8 +43,7 @@ fun ChannelCard(channel: Channel, navHostController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    uri = channel.imageUrl!!,
-
+                    uri = channel.imageUrl,
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape),

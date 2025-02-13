@@ -73,7 +73,7 @@ fun ChatScreen(
                 )
             }
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(10.dp)
             ) {
                 viewModel.data.whenLoading {
                     LoadingCPI(modifier = Modifier.fillMaxSize())
@@ -86,6 +86,7 @@ fun ChatScreen(
                     }
                 }
             }
+
             Row(
                 modifier = Modifier.fillMaxWidth().padding(5.dp),
                 verticalAlignment = Alignment.CenterVertically

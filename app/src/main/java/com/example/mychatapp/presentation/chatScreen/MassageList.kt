@@ -40,7 +40,7 @@ fun MassageList(data: ChatViewModel.Data) {
 
                     }
                     is ChatViewModel.ChatListItem.ReceivedMessage -> {
-                        MessageCard(message = chatListItem.message, time = chatListItem.time)
+                        MessageCard(message = chatListItem.message, time = chatListItem.time, senderName = chatListItem.senderName)
                     }
                     is ChatViewModel.ChatListItem.SentMessages -> {
                         MessageCard(message = chatListItem.message, time = chatListItem.time)

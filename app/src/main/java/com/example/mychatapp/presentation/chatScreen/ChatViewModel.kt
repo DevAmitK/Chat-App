@@ -32,6 +32,7 @@ class ChatViewModel(
         data class ReceivedMessage(
             val time: String,
             val message: Message,
+            val senderName: String?,
         ) : ChatListItem()
 
         data class Date(val date: String) : ChatListItem()
@@ -57,8 +58,10 @@ class ChatViewModel(
             //TODO Replace get firebase user to Local user
             val user =userRepo.getUserById(currentUserId())
             launch {
+                // TODO Fetch if only a group channel
+                val users = userRepo.getAllUser()
                 repo.getChannelWithFlowMessage(channelId).collectLatest {
-                    data.update(Data(it,user,createChatListItems(it, currentUserId())))
+                    data.update(Data(it, user, createChatListItems(it, currentUserId(), users)))
                 }
             }
 
@@ -105,7 +108,8 @@ class ChatViewModel(
 
     private fun createChatListItems(
         channel: Channel,
-        currentUser: String
+        currentUser: String,
+        users: List<User>,
     ): List<ChatListItem> {
 
         return buildList {
@@ -127,10 +131,18 @@ class ChatViewModel(
                         ), message
                     )
                 }else{
+                    val name =
+                        if (channel.type == Channel.Type.Group) {
+                            users.find { it.id == message.sender }?.name
+                                ?: error("User Not Found ${message.sender}")
+                        } else {
+                            null
+                        }
+
                     ChatListItem.ReceivedMessage(
                         DateTimeUtils.formatTime(
                             DateTimeUtils.Format.HOUR_MIN_12, message.time.toDate().time
-                        ), message
+                        ), message, name
                     )
                 }
                 add(chatListItem)
@@ -142,7 +154,7 @@ class ChatViewModel(
         val email = Firebase.auth.currentUser!!.email
         val timestamp = System.currentTimeMillis()
         execute {
-           val imageUrl = storageRepo.uploadFile("media/${timestamp}",uri.toUri())
+            val imageUrl = storageRepo.uploadFile("media/${timestamp}", uri.toUri())
 
             val message = Message(
                 message = "",
