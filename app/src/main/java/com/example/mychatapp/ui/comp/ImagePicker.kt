@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -15,7 +16,7 @@ import com.streamliners.pickers.media.PickedMedia
 
 
 @Composable
-fun ProfileImagePicker(
+fun ImagePicker(
     defaultIconResId: Int, // Pass the default drawable resource ID
     imagePickMedia : PickedMedia ? = null,
     imageUri : String ? = null,
@@ -26,6 +27,7 @@ fun ProfileImagePicker(
             modifier = Modifier.clickable { onImageUploadClick() }
                 .size(100.dp)
                 .clip(CircleShape),
+            contentScale = ContentScale.Inside,
             model = imagePickMedia.uri, contentDescription = null)
     } else if(imageUri != null){
         AsyncImage(

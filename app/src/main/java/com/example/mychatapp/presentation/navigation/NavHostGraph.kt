@@ -10,6 +10,7 @@ import com.example.mychatapp.presentation.loginScreen.LoginScreen
 import com.example.mychatapp.presentation.chatScreen.ChatScreen
 import com.example.mychatapp.presentation.homeScreen.Home
 import com.example.mychatapp.presentation.newChatsScreen.NewChatScreen
+import com.example.mychatapp.presentation.newGroupChat.NewGroupChatScreen
 import com.example.mychatapp.presentation.splashScreen.SplashScreen
 import com.example.mychatapp.presentation.userProfileScreen.UserProfileScreen
 import com.streamliners.base.BaseActivity
@@ -41,6 +42,10 @@ fun BaseActivity.NavHostGraph() {
         composable<Routes.NewChatScreen> {
 
             NewChatScreen(navHostController = navHostController, chatViewModel = koinBaseViewModel())
+        }
+        composable<Routes.NewGroupChatScreen> {
+
+            NewGroupChatScreen(navHostController = navHostController, chatViewModel = koinBaseViewModel())
         }
 
         composable<Routes.ChatScreen> {

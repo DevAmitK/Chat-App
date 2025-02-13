@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
-import com.example.mychatapp.ui.comp.ProfileImagePicker
+import com.example.mychatapp.ui.comp.ImagePicker
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
@@ -87,7 +87,7 @@ fun UserProfileScreen(navHostController: NavHostController, viewModel: UserProfi
                                 defaultElevation = 8.dp
                             ),
                         ) {
-                            ProfileImagePicker(
+                            ImagePicker(
                                 defaultIconResId = R.drawable.person_24,
                                 imageUri = userData.imageUri) {
                                 /**

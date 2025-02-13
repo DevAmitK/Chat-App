@@ -21,6 +21,9 @@ object Routes {
     object NewChatScreen
 
     @Serializable
+    object NewGroupChatScreen
+
+    @Serializable
     object UserProfileScreen
 
     @Serializable

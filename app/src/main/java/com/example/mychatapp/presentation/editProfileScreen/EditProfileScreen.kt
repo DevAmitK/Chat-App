@@ -46,7 +46,7 @@ import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.presentation.common.CustomEditText
 import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.CustomDialog
-import com.example.mychatapp.ui.comp.ProfileImagePicker
+import com.example.mychatapp.ui.comp.ImagePicker
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -142,7 +142,7 @@ fun EditProfileScreen(
             ) {
                 // Profile image picker
                 Card {
-                    ProfileImagePicker(
+                    ImagePicker(
                         defaultIconResId = R.drawable.person_24,
                         imageUri = imageUriString,
                         imagePickMedia = imageUri

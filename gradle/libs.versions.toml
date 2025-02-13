@@ -8,13 +8,14 @@ firebaseUiAuth = "8.0.2"
 gson = "2.10.1"
 koinAndroid = " 3.5.3"
 koinAndroidVersion = " 3.5.3"
-kotlin = "1.9.0"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxSerializationJson = "1.8.0"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
+activityCompose = "1.10.0"
 composeBom = "2024.11.00"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.1.0"
@@ -52,10 +53,11 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-android-v353 = { module = "io.insert-koin:koin-android", version.ref = "koinAndroidVersion" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 utils = { module = "com.github.The-Streamliners.DroidLibs:utils", version.ref = "base" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 
     id("kotlin-kapt")
-   // id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
 
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("plugin.serialization") version "2.1.10"
+
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" // this version matches your Kotlin version
+
 
 
 }
@@ -68,6 +70,7 @@ android {
     buildToolsVersion = "35.0.0"
 }
 
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -125,7 +128,7 @@ dependencies {
 
 
     // Kotlin serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
 
     // coil Image
     implementation(libs.coil.compose)
