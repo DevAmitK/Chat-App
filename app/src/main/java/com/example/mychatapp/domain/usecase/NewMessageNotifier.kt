@@ -1,5 +1,6 @@
 package com.example.mychatapp.domain.usecase
 
+import android.adservices.topics.Topic
 import com.example.mychatapp.domain.remote.OtherRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.helper.fcm.AndroidPayload
@@ -13,12 +14,12 @@ class NewMessageNotifier(
     private val fcmSender: FcmSender,
     private val userRepo: UserRepo,
 ){
-    suspend fun notify(
+    suspend fun notifySingleUser(
         userId: String,
         userName: String,
         message: String,
     ) {
-    val scvAcJson = otherRepo.getServiceAccountJson()
+
         val token = userRepo.getUserById(id = userId).fcmToken ?: return
       val payload = FcmPayload(
           FcmMessage.forToken(
@@ -32,8 +33,38 @@ class NewMessageNotifier(
                 )
             )
         )
+        sendNotification(payload)
 
-    fcmSender.send(fcmPayload = payload , serviceAccountJson = scvAcJson)
 }
+
+    suspend fun notifyMultipleUsers(
+        userName: String,
+        message: String,
+        topic: String
+    ) {
+        val payload = FcmPayload(
+            FcmMessage.forTopic(
+                topic = topic,
+                notification = NotificationPayload(
+                    title = userName,
+                    body = message
+                ),
+                android = AndroidPayload(
+                    priority = "high"
+                )
+            )
+        )
+        sendNotification(payload)
+
+    }
+
+
+
+
+
+    private suspend fun sendNotification(payload: FcmPayload) {
+        val scvAcJson = otherRepo.getServiceAccountJson()
+        fcmSender.send(fcmPayload = payload , serviceAccountJson = scvAcJson)
+    }
 
 }

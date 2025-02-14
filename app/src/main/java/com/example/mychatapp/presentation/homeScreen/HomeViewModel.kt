@@ -5,10 +5,14 @@ import com.example.mychatapp.domain.ext.imageUri
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.UserRepo
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.base.taskState.update
+import com.streamliners.base.taskState.value
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
@@ -42,8 +46,19 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             channelsState.update(channels)
+
+            subscribeForGroupNotification()
+        }
+    }
+
+    private fun subscribeForGroupNotification() {
+        execute(false) {
+
+            channelsState.value().filter {
+                it.type == Channel.Type.Group
+            }.forEach { channel ->
+                Firebase.messaging.subscribeToTopic(channel.id()).await()
+            }
         }
     }
 }
-
-

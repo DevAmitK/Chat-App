@@ -2,15 +2,16 @@ package com.example.mychatapp.presentation.chatScreen
 
 import androidx.core.net.toUri
 import com.example.mychatapp.domain.ext.currentUserId
+import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.Channel
+import com.example.mychatapp.domain.model.Channel.Type.Group
+import com.example.mychatapp.domain.model.Channel.Type.OneToOne
 import com.example.mychatapp.domain.model.Message
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.domain.usecase.NewMessageNotifier
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
@@ -64,10 +65,9 @@ class ChatViewModel(
                     data.update(Data(it, user, createChatListItems(it, currentUserId(), users)))
                 }
             }
-
         }
-
     }
+
 
     fun sendMessage(
         messageStr: String,
@@ -86,22 +86,46 @@ class ChatViewModel(
         }
     }
 
+
     private fun notifyOtherUser(messageString: String) {
         val channel = data.value().channel
         val user = data.value().user
-        if (channel.type == Channel.Type.OneToOne) {
-            val otherUser = channel.members.find {
-                it != currentUserId()
-            } ?: error("Other User Not found")
+        when (channel.type) {
+            OneToOne -> notifySingleUserByToken(channel, messageString, user)
+            Group -> notifyMultipleUserByTopic(channel,messageString,user)
+        }
+    }
 
 
-            execute {
-                newMessageNotifier.notify(
-                    message = messageString,
-                    userId =otherUser,
-                    userName =user.name
-                )
-            }
+    private fun notifyMultipleUserByTopic(
+        channel: Channel, messageString: String,user: User
+    ) {
+        //TODO Send To all User Except Current User(silently received)
+      execute(false) {
+          newMessageNotifier.notifyMultipleUsers(
+              topic = channel.id(),
+               userName = user.name,
+              message = messageString
+          )
+      }
+    }
+
+
+    private fun notifySingleUserByToken(
+        channel: Channel,
+        messageString: String,
+        user: User,
+    ) {
+        val otherUser = channel.members.find {
+            it != currentUserId()
+        } ?: error("Other User Not found")
+
+        execute(false) {
+            newMessageNotifier.notifySingleUser(
+                message = messageString,
+                userId = otherUser,
+                userName = user.name
+            )
         }
     }
 
@@ -124,7 +148,7 @@ class ChatViewModel(
                     previousDate = dateString
                 }
 
-                var chatListItem = if (message.sender == currentUser) {
+                val chatListItem = if (message.sender == currentUser) {
                     ChatListItem.SentMessages(
                         DateTimeUtils.formatTime(
                             DateTimeUtils.Format.HOUR_MIN_12, message.time.toDate().time
@@ -132,7 +156,7 @@ class ChatViewModel(
                     )
                 }else{
                     val name =
-                        if (channel.type == Channel.Type.Group) {
+                        if (channel.type == Group) {
                             users.find { it.id == message.sender }?.name
                                 ?: error("User Not Found ${message.sender}")
                         } else {
@@ -150,8 +174,10 @@ class ChatViewModel(
         }
     }
 
-    fun sendImage(uri: String,channelId:String){
-        val email = Firebase.auth.currentUser!!.email
+
+    fun sendImage(
+        uri: String,channelId:String
+    ){
         val timestamp = System.currentTimeMillis()
         execute {
             val imageUrl = storageRepo.uploadFile("media/${timestamp}", uri.toUri())
@@ -163,7 +189,7 @@ class ChatViewModel(
             )
             repo.sendMassage(channelId = channelId, message =message)
             notifyOtherUser("Send An Image ")
-
         }
     }
+
 }
