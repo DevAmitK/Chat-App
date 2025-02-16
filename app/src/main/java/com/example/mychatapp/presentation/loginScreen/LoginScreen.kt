@@ -83,11 +83,11 @@ fun LoginScreen(
     if (showDialog) {
         CustomDialog(
             showDialog = true,
-            title = "User Not Found",
-            message = "$showDialogErrorMessage , click Go To Login Page ",
-            confirmButtonText = "Go To Login Page",
+            title = "Try Again",
+            message = "Something Went Wrong ! \n Please Try Again",
+            confirmButtonText = "Close",
             onConfirm = {
-                navHostController.navigate(Routes.LoginScreen)
+                showDialog = false
             }
         )
     }
