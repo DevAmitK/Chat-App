@@ -48,13 +48,11 @@ fun ChannelCard(channel: Channel, navHostController: NavHostController) {
                         .size(50.dp)
                         .clip(CircleShape),
                 )
-                Column {
                     Text(
                         text = channel.name,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
-                }
             }
             Spacer(
                 modifier = Modifier
