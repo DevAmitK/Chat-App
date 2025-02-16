@@ -43,7 +43,7 @@ class ChannelRepoImpl @Inject constructor(
         culRef.document(id).set(
             Channel(
                 imageUrl = null,
-                name = "Amit",
+                name ="OneToOne",
                 type = Channel.Type.OneToOne,
                 description = null,
                 members = listOf(currentUserId, otherUserId),
