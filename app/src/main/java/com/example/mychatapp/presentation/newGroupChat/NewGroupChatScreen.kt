@@ -25,6 +25,7 @@ import com.example.mychatapp.R
 import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.presentation.newGroupChat.comp.GroupInfoInput
 import com.example.mychatapp.presentation.newGroupChat.comp.MembersInput
+import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.LoadingCPI
 import com.example.mychatapp.ui.comp.placeHolder
 import com.example.mychatapp.ui.theme.floatingActionButton
@@ -44,7 +45,7 @@ fun NewGroupChatScreen(
     navHostController: NavHostController,
 ) {
     val image = remember {
-        mutableStateOf<PickedMedia?>(null)
+        mutableStateOf<ImageState?>(ImageState.Empty)
     }
     val nameInput = remember {
         mutableStateOf(
@@ -84,7 +85,7 @@ fun NewGroupChatScreen(
                     nameInput.ifValidInput {
                         chatViewModel.createGroupChannel(
                             name = nameInput.value.value,
-                            groupImage = image.value ,
+                            groupImage =image.value,
                             description = groupDescriptionInput.value.value,
                             members = members,
                             onChannelReady = {channelId->

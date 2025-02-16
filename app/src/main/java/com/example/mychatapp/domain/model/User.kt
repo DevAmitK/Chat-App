@@ -1,5 +1,7 @@
 package com.example.mychatapp.domain.model
 
+import com.example.mychatapp.ui.comp.ImageState
+
 
 data class User(
     val id: String,

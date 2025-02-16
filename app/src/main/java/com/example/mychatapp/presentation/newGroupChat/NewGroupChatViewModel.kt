@@ -7,6 +7,7 @@ import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
+import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.placeHolder
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.exception.failure
@@ -37,7 +38,7 @@ class NewGroupChatViewModel @Inject constructor(
     fun createGroupChannel(
         name: String,
         description: String,
-        groupImage : PickedMedia?,
+        groupImage : ImageState?,
         members : List<String>,
         onChannelReady: (String) -> Unit
     ) {
@@ -45,7 +46,7 @@ class NewGroupChatViewModel @Inject constructor(
         execute(showLoadingDialog = false) {
             if (members.size < 2) failure("Members must be two or more then two")
             val imageUrl =   groupImage?.let {
-                storageRepo.uploadFile("groupImages/$name-${System.currentTimeMillis()}", it.uri.toUri())
+                storageRepo.uploadFile("groupImages/$name-${System.currentTimeMillis()}", it)
             } ?: placeHolder(name = name)
 
             val channelId = channelRepo.createGroupChannel(

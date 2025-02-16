@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
+import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.LoadingCPI
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoaded
@@ -110,7 +111,7 @@ fun ChatScreen(
                                     val list = getList()
                                     list.firstOrNull()?.let {
                                        viewModel.sendImage(
-                                           uri = it.uri,
+                                           uri = ImageState.New(it),
                                            channelId = channelId)
                                     }
                                 }

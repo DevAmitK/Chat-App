@@ -12,6 +12,7 @@ import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.domain.usecase.NewMessageNotifier
+import com.example.mychatapp.ui.comp.ImageState
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
@@ -176,11 +177,12 @@ class ChatViewModel(
 
 
     fun sendImage(
-        uri: String,channelId:String
+        uri: ImageState,
+        channelId:String
     ){
         val timestamp = System.currentTimeMillis()
         execute {
-            val imageUrl = storageRepo.uploadFile("media/${timestamp}", uri.toUri())
+            val imageUrl = storageRepo.uploadFile("media/${timestamp}", uri)
 
             val message = Message(
                 message = "",

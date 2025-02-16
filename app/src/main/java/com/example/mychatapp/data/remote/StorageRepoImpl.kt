@@ -1,31 +1,33 @@
 package com.example.mychatapp.data.remote
 
-import android.net.Uri
-import android.util.Log
+import androidx.core.net.toUri
 import com.example.mychatapp.domain.remote.StorageRepo
+import com.example.mychatapp.ui.comp.ImageState
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.tasks.await
 
 class StorageRepoImpl : StorageRepo {
-    override suspend fun uploadFile(path: String, uri: Uri): String {
-        Log.d("ImageUrlCheck", "$path uploadFile: $uri")
+    override suspend fun uploadFile(path: String, imageState: ImageState): String? {
 
-        return try {
-            // Get the reference to the file location in Firebase Storage
-            val storageReference = Firebase.storage.getReference(path)
-
-            // Upload the file
-            storageReference.putFile(uri).await()
-
-            // Get the download URL after the upload is complete
-            val downloadUrl = storageReference.downloadUrl.await()
-
-            // Return the download URL as a string
-            downloadUrl.toString()
-
-        } catch (exception: Exception) {
-            throw IllegalStateException("Failed to upload file or retrieve URL", exception)
+       return when(imageState){
+            ImageState.Empty -> null
+            is ImageState.Exists -> imageState.url
+            is ImageState.New -> {
+                // Get the reference to the file location in Firebase Storage
+                val storageReference = Firebase.storage.getReference(path)
+                // Upload the file
+                storageReference.putFile(imageState.pickedMedia.uri.toUri()).await()
+                // Get the download URL after the upload is complete
+                val downloadUrl = storageReference.downloadUrl.await()
+                // Return the download URL as a string
+                downloadUrl.toString()
+            }
         }
+
+
+
+
+
     }
 }

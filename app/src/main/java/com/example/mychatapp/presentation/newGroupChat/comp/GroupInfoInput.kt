@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.mychatapp.R
 import com.example.mychatapp.ui.comp.ImagePicker
+import com.example.mychatapp.ui.comp.ImageState
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.state.TextInputState
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GroupInfoInput(
-    image: MutableState<PickedMedia?>,
+    image: MutableState<ImageState?>,
     nameInput: MutableState<TextInputState>,
     groupDescriptionInput: MutableState<TextInputState>
 ) {
@@ -42,7 +43,7 @@ fun GroupInfoInput(
     ) {
 
         ImagePicker(defaultIconResId = R.drawable.group_add_24,
-            imagePickMedia = image.value,
+            imageUri = image.value,
             onImageUploadClick = {
                 mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
                     type = MediaType.Image,
@@ -60,7 +61,7 @@ fun GroupInfoInput(
                         ) {
                             val list = getList()
                             list.firstOrNull()?.let {
-                                image.value = it
+                                image.value = ImageState.New(it)
                             }
                         }
                     }
