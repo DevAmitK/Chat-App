@@ -64,7 +64,7 @@ fun ChatScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding()
-                .padding(paddingValue)
+                .padding(top = paddingValue.calculateTopPadding(), bottom = 0.dp)
 
         ) {
 
