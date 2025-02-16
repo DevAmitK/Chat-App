@@ -22,7 +22,7 @@ fun ImagePicker(
     imageUri: ImageState?
 ) {
     Log.d("ImagePicker", "ImagePicker: $imageUri")
-    if (imageUri != null) {
+    if (imageUri?.data() != null) {
         AsyncImage(
             modifier = Modifier
                 .clickable { onImageUploadClick() }
