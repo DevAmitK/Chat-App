@@ -112,7 +112,7 @@ class ChannelRepoImpl @Inject constructor(
         return id
     }
 
-    override suspend fun sendMassage(channelId: String, message: Message) {
+    override suspend fun sendMessage(channelId: String, message: Message) {
         firestore.userChannel()
             .document(channelId)
             .update(Channel::messages.name , FieldValue.arrayUnion(message))

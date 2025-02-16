@@ -1,6 +1,5 @@
 package com.example.mychatapp.presentation.chatScreen
 
-import androidx.core.net.toUri
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.Channel
@@ -81,7 +80,7 @@ class ChatViewModel(
         )
 
         execute(showLoadingDialog = false) {
-            repo.sendMassage(channelId = channelId, message =message)
+            repo.sendMessage(channelId = channelId, message =message)
             notifyOtherUser(messageStr)
             onSuccess()
         }
@@ -189,7 +188,7 @@ class ChatViewModel(
                 sender = currentUserId(),
                 mediaUrl = imageUrl
             )
-            repo.sendMassage(channelId = channelId, message =message)
+            repo.sendMessage(channelId = channelId, message =message)
             notifyOtherUser("Send An Image ")
         }
     }

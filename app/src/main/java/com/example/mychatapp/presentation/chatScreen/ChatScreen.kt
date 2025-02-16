@@ -130,8 +130,8 @@ fun ChatScreen(
                     state = massageInput,
                     trailingIconButton = {
                         IconButton(onClick = {
-                            massageInput.ifValidInput { massage ->
-                                viewModel.sendMessage(massage, channelId = channelId, onSuccess = {
+                            massageInput.ifValidInput { message ->
+                                viewModel.sendMessage(message, channelId = channelId, onSuccess = {
                                     massageInput.update("")
                                 })
                             }
