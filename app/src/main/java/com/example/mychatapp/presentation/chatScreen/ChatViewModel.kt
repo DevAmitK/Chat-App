@@ -104,7 +104,7 @@ class ChatViewModel(
       execute(false) {
           newMessageNotifier.notifyMultipleUsers(
               topic = channel.id(),
-               userName = user.name,
+               sender = user,
               message = messageString
           )
       }

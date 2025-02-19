@@ -1,6 +1,7 @@
 package com.example.mychatapp.domain.usecase
 
-import android.adservices.topics.Topic
+import com.example.mychatapp.domain.ext.id
+import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.OtherRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.helper.fcm.AndroidPayload
@@ -8,6 +9,9 @@ import com.example.mychatapp.helper.fcm.FcmMessage
 import com.example.mychatapp.helper.fcm.FcmPayload
 import com.example.mychatapp.helper.fcm.FcmSender
 import com.example.mychatapp.helper.fcm.NotificationPayload
+
+
+const val SENDER_USER_ID = "senderUserId"
 
 class NewMessageNotifier(
     private val otherRepo: OtherRepo,
@@ -38,7 +42,7 @@ class NewMessageNotifier(
 }
 
     suspend fun notifyMultipleUsers(
-        userName: String,
+        sender: User,
         message: String,
         topic: String
     ) {
@@ -46,9 +50,10 @@ class NewMessageNotifier(
             FcmMessage.forTopic(
                 topic = topic,
                 notification = NotificationPayload(
-                    title = userName,
+                    title = sender.name,
                     body = message
                 ),
+                data = mapOf(SENDER_USER_ID to sender.id()),
                 android = AndroidPayload(
                     priority = "high"
                 )

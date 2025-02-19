@@ -7,6 +7,7 @@ import com.example.mychatapp.MainActivity
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.domain.remote.UserRepo
+import com.example.mychatapp.domain.usecase.SENDER_USER_ID
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -23,22 +24,39 @@ class ChatAppFCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+
+//        val data = message.data
+//        loadData(data)
+
+
         val notificationParams = message.notification ?: return
         val title = notificationParams.title ?: return
         val body = notificationParams.body ?: return
-        showNotification(title, body)
 
-        val data = message.data
-        loadData(data)
+        val senderUserId = message.data[SENDER_USER_ID]
+
+
+
+        defaultExecuteHandlingError(
+            lambda = {
+                //Skip showing notification if send it self
+
+                if (senderUserId == currentUserId()) return@defaultExecuteHandlingError
+                showNotification(title, body)
+            },
+            buildType = BuildConfig.BUILD_TYPE
+        )
+
+
 
     }
 
-    private fun loadData(data: Map<String, String>) {
-        data.forEach { (key, value) ->
-            Log.i("ChatAppDebug", "Message Receive: ($key , $value)")
-        }
-
-    }
+//    private fun loadData(data: Map<String, String>) {
+//        data.forEach { (key, value) ->
+//            Log.i("ChatAppDebug", "Message Receive: ($key , $value)")
+//        }
+//
+//    }
 
     private fun showNotification(title: String, body: String) {
         NotificationHelper(this)
