@@ -8,6 +8,8 @@ import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.domain.usecase.SENDER_USER_ID
+import com.example.mychatapp.helper.fcm.Base64Util
+import com.example.mychatapp.helper.fcm.NewMessageNotification
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -24,20 +26,18 @@ class ChatAppFCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-
        val data = message.data
-//        loadData(data)
 
-        val title = data["title"] ?: return
-        val body =data["body"] ?: return
 
 
         defaultExecuteHandlingError(
             lambda = {
+                val objectStr = data["object"] ?: error("New Message Objet Not Received")
+                val notification = Base64Util.decodeJson<NewMessageNotification>(objectStr)
+
                 //Skip showing notification if send it self
-                val senderUserId = message.data[SENDER_USER_ID]
-               // if (senderUserId == currentUserId()) return@defaultExecuteHandlingError
-                showNotification(title, body)
+               if (notification.senderUserId == currentUserId()) return@defaultExecuteHandlingError
+                showNotification(notification.title, notification.body)
             },
             buildType = BuildConfig.BUILD_TYPE
         )

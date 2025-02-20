@@ -4,11 +4,12 @@ import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.OtherRepo
 import com.example.mychatapp.domain.remote.UserRepo
-import com.example.mychatapp.helper.fcm.AndroidPayload
+import com.example.mychatapp.helper.fcm.Base64Util
 import com.example.mychatapp.helper.fcm.FcmMessage
 import com.example.mychatapp.helper.fcm.FcmPayload
 import com.example.mychatapp.helper.fcm.FcmSender
-import com.example.mychatapp.helper.fcm.NotificationPayload
+import com.example.mychatapp.helper.fcm.NewMessageNotification
+import com.google.android.gms.common.util.Base64Utils
 
 
 const val SENDER_USER_ID = "senderUserId"
@@ -25,28 +26,40 @@ class NewMessageNotifier(
     ) {
 
         val token = userRepo.getUserById(id = userId).fcmToken ?: return
-      val payload = FcmPayload(
-          FcmMessage.forToken(
-              token = token,
-              data = mapOf("title" to userName,
-                  "body" to message),
+
+
+        val newMessageNotification = NewMessageNotification(
+            title = userName,
+            body = message
+        )
+
+        val payload = FcmPayload(
+            FcmMessage.forToken(
+                token = token,
+                data = mapOf(
+                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                ),
             )
         )
-        sendNotification(payload)
+            sendNotification(payload)
 
-}
+
+    }
 
     suspend fun notifyMultipleUsers(
         sender: User,
         message: String,
         topic: String
     ) {
+        val newMessageNotification = NewMessageNotification(
+            title = sender.name,
+            body = message,
+            senderUserId = sender.id()
+        )
         val payload = FcmPayload(
             FcmMessage.forTopic(
                 topic = topic,
-                data = mapOf("title" to sender.name,
-                    "body" to message,
-                    SENDER_USER_ID to sender.id()),
+                data = mapOf( "object" to Base64Util.encodeAsJson(newMessageNotification)),
             )
         )
         sendNotification(payload)
