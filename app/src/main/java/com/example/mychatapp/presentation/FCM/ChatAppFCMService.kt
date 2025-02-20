@@ -6,8 +6,8 @@ import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.example.mychatapp.helper.fcm.Base64Util
-import com.example.mychatapp.helper.fcm.NewMessageNotification
-import com.example.mychatapp.helper.fcm.NotificationType
+import com.example.mychatapp.helper.fcm.Notification
+import com.example.mychatapp.helper.fcm.Notification.NewMessageNotification
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.streamliners.base.exception.defaultExecuteHandlingError
@@ -25,17 +25,14 @@ class ChatAppFCMService : FirebaseMessagingService() {
 
         defaultExecuteHandlingError(
             lambda = {
-                val type = data["type"]
-                    ?.run {
-                        NotificationType.valueOf(this)
-                    }
-                    ?: error("type Not Found")
-                val objectStr = data["object"] ?: error("New Message Objet Not Received")
-                val notification = Base64Util.decodeJson<NewMessageNotification>(objectStr)
 
-                when(type){
-                    NotificationType.NewMessage -> handelNewMessageNotification(notification)
+                val objectStr = data["object"] ?: error("New Message Objet Not Received")
+                val notification = Base64Util.decodeJson<Notification>(objectStr,Notification.supportingGson())
+
+                when(notification){
+                    is NewMessageNotification -> handelNewMessageNotification(notification)
                 }
+
             },
             buildType = BuildConfig.BUILD_TYPE
         )
@@ -43,7 +40,7 @@ class ChatAppFCMService : FirebaseMessagingService() {
 
     private fun handelNewMessageNotification(notification: NewMessageNotification) {
         //Skip showing notification if send it self
-     //     if (notification.senderUserId == currentUserId()) return
+      if (notification.senderUserId == currentUserId()) return
         showNotification(notification.title, notification.body)
     }
 

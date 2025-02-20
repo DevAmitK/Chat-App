@@ -8,8 +8,8 @@ import com.example.mychatapp.helper.fcm.Base64Util
 import com.example.mychatapp.helper.fcm.FcmMessage
 import com.example.mychatapp.helper.fcm.FcmPayload
 import com.example.mychatapp.helper.fcm.FcmSender
-import com.example.mychatapp.helper.fcm.NewMessageNotification
-import com.example.mychatapp.helper.fcm.NotificationType
+import com.example.mychatapp.helper.fcm.Notification
+import com.example.mychatapp.helper.fcm.Notification.Companion.supportingGson
 
 
 class NewMessageNotifier(
@@ -26,7 +26,7 @@ class NewMessageNotifier(
         val token = userRepo.getUserById(id = userId).fcmToken ?: return
 
 
-        val newMessageNotification = NewMessageNotification(
+        val newMessageNotification = Notification.NewMessageNotification(
             title = userName,
             body = message
         )
@@ -35,8 +35,7 @@ class NewMessageNotifier(
             FcmMessage.forToken(
                 token = token,
                 data = mapOf(
-                    "type" to NotificationType.NewMessage,
-                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                    "object" to Base64Util.encodeAsJson(newMessageNotification,gson = supportingGson())
                 ),
             )
         )
@@ -50,7 +49,7 @@ class NewMessageNotifier(
         message: String,
         topic: String
     ) {
-        val newMessageNotification = NewMessageNotification(
+        val newMessageNotification =Notification.NewMessageNotification(
             title = sender.name,
             body = message,
             senderUserId = sender.id()
@@ -59,8 +58,7 @@ class NewMessageNotifier(
             FcmMessage.forTopic(
                 topic = topic,
                 data = mapOf(
-                    "type" to NotificationType.NewMessage,
-                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                    "object" to Base64Util.encodeAsJson(any = newMessageNotification, gson = supportingGson())
                 ),
             )
         )
