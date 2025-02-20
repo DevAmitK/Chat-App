@@ -28,13 +28,8 @@ class NewMessageNotifier(
       val payload = FcmPayload(
           FcmMessage.forToken(
               token = token,
-                notification = NotificationPayload(
-                    title = userName,
-                    body = message
-                ),
-                android = AndroidPayload(
-                    priority = "high"
-                )
+              data = mapOf("title" to userName,
+                  "body" to message),
             )
         )
         sendNotification(payload)
@@ -49,14 +44,9 @@ class NewMessageNotifier(
         val payload = FcmPayload(
             FcmMessage.forTopic(
                 topic = topic,
-                notification = NotificationPayload(
-                    title = sender.name,
-                    body = message
-                ),
-                data = mapOf(SENDER_USER_ID to sender.id()),
-                android = AndroidPayload(
-                    priority = "high"
-                )
+                data = mapOf("title" to sender.name,
+                    "body" to message,
+                    SENDER_USER_ID to sender.id()),
             )
         )
         sendNotification(payload)

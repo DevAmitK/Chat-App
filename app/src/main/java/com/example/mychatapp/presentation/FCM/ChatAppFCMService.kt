@@ -25,23 +25,18 @@ class ChatAppFCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-//        val data = message.data
+       val data = message.data
 //        loadData(data)
 
-
-        val notificationParams = message.notification ?: return
-        val title = notificationParams.title ?: return
-        val body = notificationParams.body ?: return
-
-        val senderUserId = message.data[SENDER_USER_ID]
-
+        val title = data["title"] ?: return
+        val body =data["body"] ?: return
 
 
         defaultExecuteHandlingError(
             lambda = {
                 //Skip showing notification if send it self
-
-                if (senderUserId == currentUserId()) return@defaultExecuteHandlingError
+                val senderUserId = message.data[SENDER_USER_ID]
+               // if (senderUserId == currentUserId()) return@defaultExecuteHandlingError
                 showNotification(title, body)
             },
             buildType = BuildConfig.BUILD_TYPE
