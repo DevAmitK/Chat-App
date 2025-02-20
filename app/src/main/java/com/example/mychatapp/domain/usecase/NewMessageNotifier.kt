@@ -9,10 +9,8 @@ import com.example.mychatapp.helper.fcm.FcmMessage
 import com.example.mychatapp.helper.fcm.FcmPayload
 import com.example.mychatapp.helper.fcm.FcmSender
 import com.example.mychatapp.helper.fcm.NewMessageNotification
-import com.google.android.gms.common.util.Base64Utils
+import com.example.mychatapp.helper.fcm.NotificationType
 
-
-const val SENDER_USER_ID = "senderUserId"
 
 class NewMessageNotifier(
     private val otherRepo: OtherRepo,
@@ -37,6 +35,7 @@ class NewMessageNotifier(
             FcmMessage.forToken(
                 token = token,
                 data = mapOf(
+                    "type" to NotificationType.NewMessage,
                     "object" to Base64Util.encodeAsJson(newMessageNotification)
                 ),
             )
@@ -59,7 +58,10 @@ class NewMessageNotifier(
         val payload = FcmPayload(
             FcmMessage.forTopic(
                 topic = topic,
-                data = mapOf( "object" to Base64Util.encodeAsJson(newMessageNotification)),
+                data = mapOf(
+                    "type" to NotificationType.NewMessage,
+                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                ),
             )
         )
         sendNotification(payload)
