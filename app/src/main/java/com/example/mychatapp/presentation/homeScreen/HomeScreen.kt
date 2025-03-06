@@ -27,6 +27,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
+import com.example.mychatapp.domain.ext.currentUserId
+import com.example.mychatapp.domain.ext.otherUserId
+import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.LoadingCPI
 import com.example.mychatapp.ui.theme.floatingActionButton
@@ -112,9 +115,12 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
                     } else {
                         items(listOfChannel) { channel ->
                             ChannelCard(
-                                channel,
-                                navHostController,
-                                viewModel.isChannelOneToOneAndOnline(channel)
+                                channel = channel,
+                                navHostController = navHostController,
+                                isOnline = if (channel.type == Channel.Type.OneToOne) {
+                                    val otherUserId= channel.otherUserId(currentUserId())
+                                    viewModel.userOnlineStatus.value[otherUserId] ?: false
+                                }else false
                             )
                         }
                     }

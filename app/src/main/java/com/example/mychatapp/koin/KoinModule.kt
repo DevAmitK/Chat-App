@@ -12,6 +12,7 @@ import com.example.mychatapp.data.remote.UserRepoImpl
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.OtherRepo
 import com.example.mychatapp.domain.remote.StorageRepo
+import com.example.mychatapp.domain.usecase.LastOnlineTSFetcher
 import com.example.mychatapp.domain.usecase.LastOnlineTSUpdater
 import com.example.mychatapp.domain.usecase.NewMessageNotifier
 import com.example.mychatapp.helper.fcm.FcmSender
@@ -50,6 +51,7 @@ val appModule = module {
     single { FcmSender(get()) }
     single { NewMessageNotifier(get(),get(),get()) }
     single { LastOnlineTSUpdater(get(),get()) }
+    single { LastOnlineTSFetcher(get()) }
 
 
 }
@@ -61,7 +63,7 @@ val viewModel = module {
     viewModel { NewChatViewModel(get (),get()) }
     viewModel { NewGroupChatViewModel(get (),get(),get()) }
     viewModel { SplashViewModel(get ()) }
-    viewModel { HomeViewModel(get (),get()) }
+    viewModel { HomeViewModel(get (),get(),get()) }
     viewModel { ChatViewModel(get (),get(),get(),get()) }
     viewModel { UserProfileViewModel(get ()) }
 

@@ -1,12 +1,15 @@
 package com.example.mychatapp.data.remote
 
-import android.text.format.Time
 import com.example.mychatapp.data.remote.FireBaseCollection.userCollection
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.UserRepo
-import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -52,6 +55,31 @@ class UserRepoImpl @Inject constructor(
             .get()
             .await()
             .toObjects(User::class.java)
+    }
+
+    override suspend fun getAllUserFlow(): Flow<List<User>> {
+        return callbackFlow {
+            val registration = firestore.userCollection()
+                .addSnapshotListener { value, error ->
+                    //Handle Error
+                    error?.let {
+                        it.printStackTrace()
+                        error(it.localizedMessage ?: "Firebase Exception" )
+                    }
+                    // Parse docs as List<User>
+                    val users = value?.toObjects(User::class.java)
+                        ?: error("User Not Found")
+                    //Finally emit the list
+                    CoroutineScope(coroutineContext).launch {
+                        send(users)
+                    }
+                }
+            //Remove Listener When Coroutine cansel
+            awaitClose {
+                registration.remove()
+            }
+        }
+
     }
 
     override suspend fun updateFcmToken(fcmToken: String, userId: String) {
