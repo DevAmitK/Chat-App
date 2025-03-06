@@ -99,6 +99,7 @@ dependencies {
     implementation (libs.firebase.bom)
     implementation (libs.firebase.ui.auth)
     implementation ("com.google.firebase:firebase-messaging:24.1.0")
+
     //GoogleSignIn
     implementation ("com.google.android.gms:play-services-auth:20.5.0")
 

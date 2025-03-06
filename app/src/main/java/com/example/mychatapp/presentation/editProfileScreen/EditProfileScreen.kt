@@ -52,6 +52,7 @@ import com.example.mychatapp.ui.comp.ImagePicker
 import com.example.mychatapp.ui.comp.ImageState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoading
@@ -278,7 +279,8 @@ fun EditProfileScreen(
                                 bio = bio.takeIf { it.isNotBlank() },
                                 gender = selectedGender,
                                 imageUri = null,
-                                fcmToken = null
+                                fcmToken = null,
+                                lastOnlineTS = Timestamp.now()
                             )
 
                             viewModel.saveUser(

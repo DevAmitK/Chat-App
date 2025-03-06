@@ -1,9 +1,11 @@
 package com.example.mychatapp.data.remote
 
+import android.text.format.Time
 import com.example.mychatapp.data.remote.FireBaseCollection.userCollection
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.UserRepo
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -56,6 +58,13 @@ class UserRepoImpl @Inject constructor(
         firestore.userCollection()
             .document(userId)
             .update(User::fcmToken.name , fcmToken)
+            .await()
+    }
+
+    override suspend fun updateLastOnlineTS(userId: String) {
+        firestore.userCollection()
+            .document(userId)
+            .update(User::lastOnlineTS.name , Timestamp.now())
             .await()
     }
 

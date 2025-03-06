@@ -1,5 +1,6 @@
 package com.example.mychatapp.domain.usecase
 
+import android.annotation.SuppressLint
 import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.OtherRepo
@@ -17,6 +18,7 @@ class NewMessageNotifier(
     private val fcmSender: FcmSender,
     private val userRepo: UserRepo,
 ){
+    @SuppressLint("SuspiciousIndentation")
     suspend fun notifySingleUser(
         userId: String,
         userName: String,

@@ -1,6 +1,6 @@
 package com.example.mychatapp.domain.model
 
-import com.example.mychatapp.ui.comp.ImageState
+import com.google.firebase.Timestamp
 
 
 data class User(
@@ -10,7 +10,8 @@ data class User(
     val bio: String?,
     val gender: Gender?,
     val imageUri: String?,
-    val fcmToken : String ?
+    val fcmToken : String ?,
+    val lastOnlineTS : Timestamp
 
 ) {
     // Secondary constructor with specific default values
@@ -21,7 +22,8 @@ data class User(
         bio = "",
         gender = null,
         imageUri = null,
-        fcmToken = null
+        fcmToken = null,
+        lastOnlineTS = Timestamp.now()
     )
     enum class Gender {
         MALE,

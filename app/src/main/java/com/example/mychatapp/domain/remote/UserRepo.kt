@@ -11,4 +11,5 @@ interface UserRepo {
     suspend fun getUserById(id: String): User
     suspend fun getAllUser(): List<User>
     suspend fun updateFcmToken(fcmToken : String,userId : String)
+    suspend fun updateLastOnlineTS(userId : String)
 }

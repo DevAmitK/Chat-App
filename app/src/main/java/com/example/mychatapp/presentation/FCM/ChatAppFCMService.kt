@@ -1,7 +1,8 @@
 package com.example.mychatapp.presentation.FCM
 
+import android.annotation.SuppressLint
 import com.example.mychatapp.BuildConfig
-import com.example.mychatapp.MainActivity
+import com.example.mychatapp.ui.main.MainActivity
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.domain.remote.UserRepo
@@ -38,6 +39,7 @@ class ChatAppFCMService : FirebaseMessagingService() {
         )
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun handelNewMessageNotification(notification: NewMessageNotification) {
         //Skip showing notification if send it self
       if (notification.senderUserId == currentUserId()) return
