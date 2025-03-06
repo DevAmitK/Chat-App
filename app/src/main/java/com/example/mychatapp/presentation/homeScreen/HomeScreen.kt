@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -29,6 +32,7 @@ import com.example.mychatapp.ui.comp.LoadingCPI
 import com.example.mychatapp.ui.theme.floatingActionButton
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.base.taskState.comp.whenLoading
+import com.streamliners.compose.comp.CenterText
 import com.streamliners.helpers.NotificationHelper
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -95,7 +99,26 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
                 LoadingCPI(modifier = Modifier.fillMaxSize())
             }
             viewModel.channelsState.whenLoaded { listOfChannel ->
-                ChannelList(listOfChannel, navHostController)
+                LazyColumn(
+                    modifier = Modifier.padding(1.dp),
+                    contentPadding = PaddingValues(1.dp),
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                ) {
+
+                    if (listOfChannel.isEmpty()) {
+                        item {
+                            CenterText(text = "Empty...")
+                        }
+                    } else {
+                        items(listOfChannel) { channel ->
+                            ChannelCard(
+                                channel,
+                                navHostController,
+                                viewModel.isChannelOneToOneAndOnline(channel)
+                            )
+                        }
+                    }
+                }
             }
         }
     }

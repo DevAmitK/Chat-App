@@ -1,11 +1,17 @@
 package com.example.mychatapp.presentation.homeScreen
+
+import androidx.compose.runtime.mutableStateMapOf
+import com.example.mychatapp.domain.Constants.OnlineTSUpdater
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.ext.imageUri
+import com.example.mychatapp.domain.ext.otherUserId
 import com.example.mychatapp.domain.model.Channel
+import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.UserRepo
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
@@ -13,6 +19,7 @@ import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.base.taskState.update
 import com.streamliners.base.taskState.value
 import kotlinx.coroutines.tasks.await
+import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 
 
@@ -22,6 +29,7 @@ class HomeViewModel @Inject constructor(
 ):BaseViewModel() {
 
     val channelsState = taskStateOf<List<Channel>>()
+    val userOnlineStatus = mutableStateMapOf<String, Boolean>()
 
     fun start() {
         execute(showLoadingDialog = false) {
@@ -30,8 +38,7 @@ class HomeViewModel @Inject constructor(
                 .map { channel ->
                     if (channel.type == Channel.Type.OneToOne) {
 
-                        val otherUserId = channel.members.find { it != currentUserId() }
-                            ?: error("Other User Id Not Found")
+                        val otherUserId = channel.otherUserId(currentUserId())
 
                         val otherUser = users.find {
                             it.id() == otherUserId
@@ -46,10 +53,31 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             channelsState.update(channels)
-
+            checkOnlineStatusOfUsers(users)
             subscribeForGroupNotification()
         }
     }
+
+    private fun checkOnlineStatusOfUsers(users: List<User>) {
+        users.forEach { user ->
+            userOnlineStatus[user.id()] = user.lastOnlineTS.isOnline()
+        }
+    }
+
+    fun isChannelOneToOneAndOnline(channel: Channel): Boolean {
+       return if (channel.type == Channel.Type.OneToOne) {
+           val otherUserId= channel.otherUserId(currentUserId())
+            userOnlineStatus[otherUserId] ?: false
+        }else false
+    }
+
+    private fun Timestamp?.isOnline(): Boolean {
+        return this?.let {
+            toDate().time + OnlineTSUpdater.EXPIRE_STATUS_INTERVAL >= currentTimeMillis()
+        } ?: false
+
+    }
+
 
     private fun subscribeForGroupNotification() {
         execute(false) {

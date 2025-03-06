@@ -1,6 +1,7 @@
 package com.example.mychatapp.presentation.homeScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.domain.ext.id
@@ -26,14 +28,18 @@ import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.AsyncImage
 
 @Composable
-fun ChannelCard(channel: Channel, navHostController: NavHostController) {
+fun ChannelCard(
+    channel: Channel,
+    navHostController: NavHostController,
+    isOnline : Boolean
+) {
     Box(
         modifier = Modifier
             .padding(3.dp)
             .clickable {
                 navHostController.navigate(Routes.ChatScreen(channel.id()))
             },
-        ) {
+    ) {
         Column {
             Row(
                 modifier = Modifier
@@ -46,13 +52,23 @@ fun ChannelCard(channel: Channel, navHostController: NavHostController) {
                     uri = channel.imageUrl,
                     modifier = Modifier
                         .size(50.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .run {
+                            // TODO : Try Showing Green Dot in On top of the profile image for Online Status
+                            if (isOnline){
+                                border(
+                                    width = 5.dp,
+                                    color = Color.Green,
+                                    shape = CircleShape
+                                )
+                            }else this
+                        },
                 )
-                    Text(
-                        text = channel.name,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
+                Text(
+                    text = channel.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
             }
             Spacer(
                 modifier = Modifier
@@ -61,6 +77,6 @@ fun ChannelCard(channel: Channel, navHostController: NavHostController) {
                     .background(MaterialTheme.colorScheme.onSecondary)
             )
         }
-      
+
     }
 }
