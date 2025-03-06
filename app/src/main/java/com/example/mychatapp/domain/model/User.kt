@@ -11,7 +11,7 @@ data class User(
     val gender: Gender?,
     val imageUri: String?,
     val fcmToken : String ?,
-    val lastOnlineTS : Timestamp
+    val lastOnlineTS : Timestamp?
 
 ) {
     // Secondary constructor with specific default values
@@ -23,7 +23,7 @@ data class User(
         gender = null,
         imageUri = null,
         fcmToken = null,
-        lastOnlineTS = Timestamp.now()
+        lastOnlineTS = null
     )
     enum class Gender {
         MALE,
