@@ -17,9 +17,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults.containerColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -43,23 +46,29 @@ import com.streamliners.helpers.NotificationHelper
 @Composable
 fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.start()
+    LaunchedEffect(Unit) {
+        HomeViewModelInitializer.startOnce(viewModel)
     }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
                 title = { Text(text = "Chats") },
-//        containerColor = MaterialTheme.colorScheme.primary,
-//        contentColor = contentColorFor(MaterialTheme.colorScheme.secondary),
                 actions = {
-                    Icon(imageVector = Icons.Rounded.AccountCircle, contentDescription = null,
+                    Icon(
+                        imageVector = Icons.Rounded.AccountCircle,
+                        contentDescription = null,
                         modifier = Modifier.clickable {
                             navHostController.navigate(Routes.EditProfileScreen)
-                        })
-
-                })
+                        }
+                    )
+                }
+            )
         },
         floatingActionButton = {
             Column(

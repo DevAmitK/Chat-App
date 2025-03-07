@@ -2,6 +2,7 @@ package com.example.mychatapp.presentation.chatScreen
 
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.ext.id
+import com.example.mychatapp.domain.ext.otherUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.Channel.Type.Group
 import com.example.mychatapp.domain.model.Channel.Type.OneToOne
@@ -10,6 +11,7 @@ import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.StorageRepo
 import com.example.mychatapp.domain.remote.UserRepo
+import com.example.mychatapp.domain.usecase.LastOnlineTSFetcher
 import com.example.mychatapp.domain.usecase.NewMessageNotifier
 import com.example.mychatapp.ui.comp.ImageState
 import com.streamliners.base.BaseViewModel
@@ -25,7 +27,8 @@ class ChatViewModel(
     private val repo: ChannelRepo,
     private val storageRepo: StorageRepo,
     private val userRepo: UserRepo,
-    private val newMessageNotifier: NewMessageNotifier
+    private val newMessageNotifier: NewMessageNotifier,
+    private val lastOnlineTSFetcher: LastOnlineTSFetcher,
 ) : BaseViewModel() {
 
 
@@ -47,6 +50,7 @@ class ChatViewModel(
     data class Data(
         val channel: Channel,
         val user: User,
+        val isOtherUserOnline: Boolean,
         val chatListItems: List<ChatListItem>,
     )
 
@@ -61,13 +65,44 @@ class ChatViewModel(
             launch {
                 // TODO Fetch if only a group channel
                 val users = userRepo.getAllUser()
-                repo.getChannelWithFlowMessage(channelId).collectLatest {
-                    data.update(Data(it, user, createChatListItems(it, currentUserId(), users)))
-                }
+                repo.getChannelWithFlowMessage(channelId, users, user.id())
+                    .collectLatest { channel ->
+                        data.update(
+                            Data(
+                                channel = channel,
+                                user = user,
+                                isOtherUserOnline = false,
+                                chatListItems = createChatListItems(channel, currentUserId(), users)
+                            )
+                        )
+                        if (
+                            channel.type == OneToOne
+                        ) {
+                            listenToOtherUserOnlineStatus(
+                                otherUserId = channel.otherUserId(
+                                    currentUserId()
+                                )
+                            )
+                        }
+                    }
             }
         }
     }
 
+    private fun listenToOtherUserOnlineStatus(
+        otherUserId: String,
+    ) {
+        execute(false) {
+            lastOnlineTSFetcher.getOnlineStatusOf(otherUserId).collectLatest {
+                data.update(
+                    data.value().copy(
+                        isOtherUserOnline = it
+                    )
+                )
+
+            }
+        }
+    }
 
     fun sendMessage(
         messageStr: String,
@@ -101,13 +136,13 @@ class ChatViewModel(
         channel: Channel, messageString: String,user: User
     ) {
         //TODO Send To all User Except Current User(silently received)
-      execute(false) {
-          newMessageNotifier.notifyMultipleUsers(
-              topic = channel.id(),
-               sender = user,
-              message = messageString
-          )
-      }
+        execute(false) {
+            newMessageNotifier.notifyMultipleUsers(
+                topic = channel.id(),
+                sender = user,
+                message = messageString
+            )
+        }
     }
 
 
