@@ -21,7 +21,6 @@ fun ImagePicker(
     onImageUploadClick: () -> Unit, // Callback to handle image upload clicks
     imageUri: ImageState?
 ) {
-    Log.d("ImagePicker", "ImagePicker: $imageUri")
     if (imageUri?.data() != null) {
         AsyncImage(
             modifier = Modifier

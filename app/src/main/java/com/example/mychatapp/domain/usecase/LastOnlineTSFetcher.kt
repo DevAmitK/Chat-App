@@ -11,18 +11,34 @@ import java.lang.System.currentTimeMillis
 class LastOnlineTSFetcher(
     private val userRepo: UserRepo,
 ) {
+
     private val userOnlineStatus = mapOf<String, Boolean>()
+    private lateinit var flow: Flow<Map<String, Boolean>>
 
     suspend fun getOnlineStatusOfAllUser(): Flow<Map<String, Boolean>> {
-        return userRepo.getAllUserFlow().map { users ->
-            userOnlineStatus.toMutableMap().apply {
-                users.forEach {user->
-                    put(user.id(),user.lastOnlineTS.isOnline())
+        initializeFlow()
+        return flow
+    }
+
+
+    suspend fun getOnlineStatusOf(userId: String): Flow<Boolean> {
+        initializeFlow()
+        return flow.map {
+            it[userId] ?: false
+        }
+    }
+
+    private suspend fun initializeFlow() {
+        if (!::flow.isInitialized) {
+            flow = userRepo.getAllUserFlow().map { users ->
+                userOnlineStatus.toMutableMap().apply {
+                    users.forEach { user ->
+                        put(user.id(), user.lastOnlineTS.isOnline())
+                    }
                 }
             }
         }
     }
-
     fun Timestamp?.isOnline(): Boolean {
         return this?.let {
             toDate().time + OnlineTSUpdater.EXPIRE_STATUS_INTERVAL >= currentTimeMillis()

@@ -1,34 +1,53 @@
 package com.example.mychatapp.presentation.chatScreen
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
+import com.example.mychatapp.presentation.navigation.Routes
+import com.example.mychatapp.ui.comp.AsyncImage
 import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.LoadingCPI
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.base.taskState.comp.whenLoading
+import com.streamliners.base.taskState.valueNullable
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 import com.streamliners.compose.comp.CenterText
 import com.streamliners.compose.comp.textInput.TextInputLayout
@@ -44,6 +63,7 @@ import com.streamliners.pickers.media.rememberMediaPickerDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     navHostController: NavHostController,
@@ -57,9 +77,49 @@ fun ChatScreen(
         viewModel.start(channelId)
     }
 
-    TitleBarScaffold(title = "Chat", navigateUp = {
-        navHostController.navigateUp()
-    }) { paddingValue ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        val data = remember {
+                            derivedStateOf {
+                                viewModel.data.valueNullable()
+                            }
+                        }
+                        AsyncImage(
+                            uri =data.value?.channel?.imageUrl ?: "" ,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .run {
+                                    // TODO : Try Showing Green Dot in On top of the profile image for Online Status
+                                    if (
+                                        data.value?.isOtherUserOnline == true
+                                    ) {
+                                        border(
+                                            width = 5.dp,
+                                            color = Color.Green,
+                                            shape = CircleShape
+                                        )
+                                    } else this
+                                },
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = data.value?.channel?.name ?: "Chat")
+                    }
+                }
+            )
+        },
+
+        ) { paddingValue ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,7 +134,9 @@ fun ChatScreen(
                 )
             }
             Column(
-                modifier = Modifier.weight(1f).padding(10.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(10.dp)
             ) {
                 viewModel.data.whenLoading {
                     LoadingCPI(modifier = Modifier.fillMaxSize())
@@ -89,7 +151,9 @@ fun ChatScreen(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 IconButton(
@@ -110,9 +174,9 @@ fun ChatScreen(
                                 ) {
                                     val list = getList()
                                     list.firstOrNull()?.let {
-                                       viewModel.sendImage(
-                                           uri = ImageState.New(it),
-                                           channelId = channelId)
+                                        viewModel.sendImage(
+                                            uri = ImageState.New(it),
+                                            channelId = channelId)
                                     }
                                 }
                             }
