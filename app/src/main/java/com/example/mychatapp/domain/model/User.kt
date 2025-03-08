@@ -1,6 +1,7 @@
 package com.example.mychatapp.domain.model
 
 import com.google.firebase.Timestamp
+import com.streamliners.base.taskState.Task
 
 
 data class User(
@@ -13,7 +14,7 @@ data class User(
     val fcmToken : String ?,
     val lastOnlineTS : Timestamp?
 
-) {
+){
     // Secondary constructor with specific default values
     constructor() : this(
         id = "",

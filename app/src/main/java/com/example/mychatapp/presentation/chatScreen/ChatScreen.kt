@@ -1,6 +1,7 @@
 package com.example.mychatapp.presentation.chatScreen
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +37,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
+import com.example.mychatapp.domain.ext.id
+import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.AsyncImage
 import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.LoadingCPI
@@ -78,6 +82,13 @@ fun ChatScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navHostController.navigateUp()
+                    }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                },
                 title = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -90,6 +101,13 @@ fun ChatScreen(
                         AsyncImage(
                             uri =data.value?.channel?.imageUrl ?: "" ,
                             modifier = Modifier
+                                .clickable {
+                                    navHostController.navigate(
+                                        Routes.UserProfileScreen(
+                                            channelId = data.value?.channel?.id()
+                                        )
+                                    )
+                                }
                                 .size(50.dp)
                                 .clip(CircleShape)
                                 .run {
