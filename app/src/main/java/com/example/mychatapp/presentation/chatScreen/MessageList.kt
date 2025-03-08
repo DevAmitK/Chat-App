@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MassageList(data: ChatViewModel.Data) {
+fun MessageList(data: ChatViewModel.Data) {
     LazyColumn(
        // modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)

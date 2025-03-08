@@ -1,8 +1,6 @@
 package com.example.mychatapp.presentation.chatScreen
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,9 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,7 +35,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
-import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.AsyncImage
 import com.example.mychatapp.ui.comp.ImageState
 import com.example.mychatapp.ui.comp.LoadingCPI
@@ -48,7 +42,6 @@ import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.base.taskState.comp.whenLoading
 import com.streamliners.base.taskState.valueNullable
-import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 import com.streamliners.compose.comp.CenterText
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.state.TextInputState
@@ -128,9 +121,9 @@ fun ChatScreen(
 
         ) {
 
-            val massageInput = remember {
+            val messageInput = remember {
                 mutableStateOf(
-                    TextInputState("Massage")
+                    TextInputState("Message")
                 )
             }
             Column(
@@ -143,7 +136,7 @@ fun ChatScreen(
                 }
                 viewModel.data.whenLoaded {
                     if (it.channel.messages.isNotEmpty()) {
-                        MassageList(it)
+                        MessageList(it)
                     } else {
                         CenterText(text = "Chat Is Empty")
                     }
@@ -191,12 +184,12 @@ fun ChatScreen(
                 }
 
                 TextInputLayout(
-                    state = massageInput,
+                    state = messageInput,
                     trailingIconButton = {
                         IconButton(onClick = {
-                            massageInput.ifValidInput { message ->
+                            messageInput.ifValidInput { message ->
                                 viewModel.sendMessage(message, channelId = channelId, onSuccess = {
-                                    massageInput.update("")
+                                    messageInput.update("")
                                 })
                             }
                         }) {
