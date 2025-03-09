@@ -1,6 +1,7 @@
 package com.example.mychatapp.presentation.homeScreen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mychatapp.R
 import com.example.mychatapp.domain.ext.currentUserId
+import com.example.mychatapp.domain.ext.id
 import com.example.mychatapp.domain.ext.otherUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.presentation.navigation.Routes
@@ -107,10 +109,14 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
                 .fillMaxSize()
                 .padding(it)
         ) {
+            Log.d("DEBUG_APP", "Home Loaded")
+
             viewModel.channelsState.whenLoading {
                 LoadingCPI(modifier = Modifier.fillMaxSize())
             }
+
             viewModel.channelsState.whenLoaded { listOfChannel ->
+                Log.d("DEBUG_APP", "Home Loaded : $listOfChannel")
                 LazyColumn(
                     modifier = Modifier.padding(1.dp),
                     contentPadding = PaddingValues(1.dp),
@@ -120,12 +126,16 @@ fun Home(navHostController: NavHostController,viewModel: HomeViewModel) {
                     if (listOfChannel.isEmpty()) {
                         item {
                             CenterText(text = "Empty...")
+
                         }
                     } else {
                         items(listOfChannel) { channel ->
                             ChannelCard(
-                                channel = channel,
-                                navHostController = navHostController,
+                              imageUrl = channel.imageUrl ?: "",
+                                name = channel.name,
+                                onClick = {
+                                    navHostController.navigate(Routes.ChatScreen(channel.id()))
+                                },
                                 isOnline = if (channel.type == Channel.Type.OneToOne) {
                                     val otherUserId= channel.otherUserId(currentUserId())
                                     viewModel.userOnlineStatus.value[otherUserId] ?: false

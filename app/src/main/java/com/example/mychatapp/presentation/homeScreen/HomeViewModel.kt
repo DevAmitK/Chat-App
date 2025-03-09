@@ -32,7 +32,6 @@ class HomeViewModel @Inject constructor(
     val userOnlineStatus = mutableStateOf<Map<String, Boolean>>(emptyMap())
 
      fun start() {
-        Log.d("Check_Start", "start: ")
         execute {
             val users = userRepo.getAllUser()
             val channels = channelRepo.getAllChannels(currentUser = currentUserId(),users)

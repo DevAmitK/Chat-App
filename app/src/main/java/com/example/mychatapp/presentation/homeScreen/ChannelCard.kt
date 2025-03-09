@@ -29,15 +29,16 @@ import com.example.mychatapp.ui.comp.AsyncImage
 
 @Composable
 fun ChannelCard(
-    channel: Channel,
-    navHostController: NavHostController,
-    isOnline : Boolean
+   imageUrl : String,
+   name:String,
+    isOnline : Boolean,
+    onClick:() -> Unit
 ) {
     Box(
         modifier = Modifier
             .padding(3.dp)
             .clickable {
-                navHostController.navigate(Routes.ChatScreen(channel.id()))
+                onClick.invoke()
             },
     ) {
         Column {
@@ -49,7 +50,7 @@ fun ChannelCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    uri = channel.imageUrl,
+                    uri = imageUrl,
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
@@ -65,7 +66,7 @@ fun ChannelCard(
                         },
                 )
                 Text(
-                    text = channel.name,
+                    text = name,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSecondary
                 )

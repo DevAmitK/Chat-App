@@ -15,7 +15,12 @@ class UserProfileViewModel(
     private val channelRepo: ChannelRepo
 ) : BaseViewModel(){
 
-    val user = taskStateOf<User?>()
+    data class UserAndGroupInfo(
+        val channel: Channel?,
+        val members: List<User?>,
+        val user: User?
+    )
+    val userAndGroupInfo = taskStateOf<UserAndGroupInfo>()
     fun getUser(
         channelId: String?
     ){
@@ -23,12 +28,32 @@ class UserProfileViewModel(
             channelId?.let {
                 val channel = channelRepo.getChannel(channelId)
                 if (channel.type == Channel.Type.OneToOne) {
-                    user.load {
+                    userAndGroupInfo.load {
                         val otherUserId = channel.members.filter {it != currentUserId() }
-                        userRepo.getUserById(otherUserId.first())
+                        val user =userRepo.getUserById(otherUserId.first())
+                        UserAndGroupInfo(
+                            user = user,
+                            channel = null,
+                            members = emptyList()
+                        )
+                    }
+                }
+                else{
+                    userAndGroupInfo.load {
+                        val groupUser = userRepo.getAllUser().filter {
+                            it.id in channel.members
+                        }
+                        UserAndGroupInfo(
+                            user = null,
+                            channel = channel,
+                            members = groupUser
+                        )
                     }
                 }
             }
         }
     }
+
+
+
 }
