@@ -1,20 +1,27 @@
 package com.example.mychatapp.presentation.userProfileScreen
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.mychatapp.domain.ext.currentUserId
 import com.example.mychatapp.domain.model.Channel
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.ChannelRepo
 import com.example.mychatapp.domain.remote.UserRepo
+import com.example.mychatapp.domain.usecase.LastOnlineTSFetcher
+import com.example.mychatapp.presentation.homeScreen.HomeViewModel
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.load
 import com.streamliners.base.taskState.taskStateOf
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class UserProfileViewModel(
     private val userRepo: UserRepo,
-    private val channelRepo: ChannelRepo
+    private val channelRepo: ChannelRepo,
+    private val lastOnlineTSFetcher: LastOnlineTSFetcher,
 ) : BaseViewModel(){
 
+    val userOnlineStatus = mutableStateOf<Map<String, Boolean>>(emptyMap())
     data class UserAndGroupInfo(
         val channel: Channel?,
         val members: List<User?>,
@@ -26,6 +33,7 @@ class UserProfileViewModel(
     ){
         execute {
             channelId?.let {
+
                 val channel = channelRepo.getChannel(channelId)
                 if (channel.type == Channel.Type.OneToOne) {
                     userAndGroupInfo.load {
@@ -50,10 +58,17 @@ class UserProfileViewModel(
                         )
                     }
                 }
+                launch {
+                    checkOnlineStatusOfUsers()
+                }
             }
         }
     }
-
+    private suspend fun checkOnlineStatusOfUsers() {
+        lastOnlineTSFetcher.getOnlineStatusOfAllUser().collectLatest {map->
+            userOnlineStatus.value = map
+        }
+    }
 
 
 }

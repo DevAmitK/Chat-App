@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.mychatapp.presentation.homeScreen.ChannelCard
+import com.example.mychatapp.ui.comp.placeHolder
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 
@@ -59,10 +60,10 @@ fun UserProfileScreen(
                         items(userAndGroupInfo.members) {user ->
                             if (user != null) {
                                 ChannelCard(
-                                    imageUrl = user.imageUri ?: "",
+                                    imageUrl = user.imageUri ?: placeHolder(user.name),
                                     name =user.name,
                                     onClick = {},
-                                    isOnline = true
+                                    isOnline = viewModel.userOnlineStatus.value[user.id] ?: false
                                 )
                             }
                         }
