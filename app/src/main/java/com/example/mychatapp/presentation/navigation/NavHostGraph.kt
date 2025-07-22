@@ -5,11 +5,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.mychatapp.presentation.editProfileScreen.EditProfileScreen
-import com.example.mychatapp.presentation.loginScreen.LoginScreen
 import com.example.mychatapp.presentation.chatScreen.ChatScreen
+import com.example.mychatapp.presentation.editProfileScreen.EditProfileScreen
 import com.example.mychatapp.presentation.homeScreen.Home
+import com.example.mychatapp.presentation.loginScreen.LoginScreen
 import com.example.mychatapp.presentation.newChatsScreen.NewChatScreen
+import com.example.mychatapp.presentation.newGroupChat.NewGroupChatScreen
 import com.example.mychatapp.presentation.splashScreen.SplashScreen
 import com.example.mychatapp.presentation.userProfileScreen.UserProfileScreen
 import com.streamliners.base.BaseActivity
@@ -42,6 +43,10 @@ fun BaseActivity.NavHostGraph() {
 
             NewChatScreen(navHostController = navHostController, chatViewModel = koinBaseViewModel())
         }
+        composable<Routes.NewGroupChatScreen> {
+
+            NewGroupChatScreen(navHostController = navHostController, chatViewModel = koinBaseViewModel())
+        }
 
         composable<Routes.ChatScreen> {
             val route: Routes.ChatScreen = it.toRoute()
@@ -52,8 +57,12 @@ fun BaseActivity.NavHostGraph() {
             )
         }
         composable<Routes.UserProfileScreen> {
-
-            UserProfileScreen(navHostController = navHostController, viewModel = koinBaseViewModel())
+            val route: Routes.UserProfileScreen = it.toRoute()
+            UserProfileScreen(
+                navHostController = navHostController,
+                viewModel = koinBaseViewModel(),
+                route.channelId
+            )
         }
 
     }

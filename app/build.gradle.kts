@@ -4,10 +4,13 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 
     id("kotlin-kapt")
-   // id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
 
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("plugin.serialization") version "2.1.10"
+
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" // this version matches your Kotlin version
+
+
 
 }
 
@@ -60,10 +63,13 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/DEPENDENCIES"
         }
     }
     buildToolsVersion = "35.0.0"
 }
+
 
 dependencies {
 
@@ -87,9 +93,28 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+
+//Firebase
     implementation (libs.google.firebase.auth)
     implementation (libs.firebase.bom)
     implementation (libs.firebase.ui.auth)
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
+
+    //GoogleSignIn
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+
+    //implementation("com.google.auth:google-auth-library-oauth2-http:1.32.1")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
+
+    implementation("com.google.firebase:firebase-firestore")
+
+    implementation ("com.google.android.gms:play-services-base:18.2.0")
+
+    // Ensure gRPC dependencies are included
+    implementation("io.grpc:grpc-okhttp:1.58.0")
+
+
+
 
 
     // Navigation
@@ -101,11 +126,10 @@ dependencies {
    // PreferencesDataStore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
-    //GoogleSignIn
-    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+
 
     // Kotlin serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
 
     // coil Image
     implementation(libs.coil.compose)
@@ -118,9 +142,12 @@ dependencies {
     // DroidLibs base dependencies add
     implementation(libs.base)
     implementation(libs.compose.android)
-    implementation("com.github.The-Streamliners.DroidLibs:compose:1.2.14")
-    implementation("com.github.The-Streamliners.DroidLibs:utils:1.2.14")
-    implementation("com.github.The-Streamliners.DroidLibs:pickers:1.2.18")
+    implementation(libs.compose)
+    implementation(libs.utils)
+    implementation("com.github.The-Streamliners.DroidLibs:pickers:1.2.19")
+    implementation("com.github.The-Streamliners.DroidLibs:helpers:1.2.19")
+   /// implementation("com.github.The-Streamliners.DroidLibs:utils:1.2.19")
+
 
     // Koin for Android
     implementation(libs.koin.android)
@@ -130,6 +157,10 @@ dependencies {
     implementation ("io.insert-koin:koin-androidx-compose:3.4.0" ) // or latest version
     //implementation( "io.insert-koin:koin-core:3.4.0")
 
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-client-cio:3.0.3")
+
+    implementation(kotlin("reflect"))
 
 
 }

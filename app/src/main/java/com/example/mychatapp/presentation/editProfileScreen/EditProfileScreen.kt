@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -46,9 +48,11 @@ import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.presentation.common.CustomEditText
 import com.example.mychatapp.presentation.navigation.Routes
 import com.example.mychatapp.ui.comp.CustomDialog
-import com.example.mychatapp.ui.comp.ProfileImagePicker
+import com.example.mychatapp.ui.comp.ImagePicker
+import com.example.mychatapp.ui.comp.ImageState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.whenLoading
@@ -58,7 +62,6 @@ import com.streamliners.pickers.media.MediaPickerCropParams
 import com.streamliners.pickers.media.MediaPickerDialog
 import com.streamliners.pickers.media.MediaPickerDialogState
 import com.streamliners.pickers.media.MediaType
-import com.streamliners.pickers.media.PickedMedia
 import com.streamliners.pickers.media.rememberMediaPickerDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,8 +80,7 @@ fun EditProfileScreen(
     var bio by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
     var bioError by remember { mutableStateOf(false) }
-    var imageUri by remember { mutableStateOf<PickedMedia?>(null) }
-    var imageUriString by remember { mutableStateOf<String?>(null) }
+    var imageState by remember { mutableStateOf<ImageState>(ImageState.Empty) }
     var selectedGender by remember { mutableStateOf<User.Gender?>(null) }
     var userUidNotFound by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -94,8 +96,17 @@ fun EditProfileScreen(
         userUidNotFound = auth.currentUser?.uid.isNullOrEmpty()
     }
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadUser()
+        viewModel.loadUser { user ->
+            name = user.name
+            bio = user.bio ?: ""
+            email = user.email
+            selectedGender = user.gender
+            user.imageUri?.let { url ->
+                imageState = ImageState.Exists(url)
+            }
+        }
     }
+
 
     // Show dialog if user UID is not found
     if (userUidNotFound) {
@@ -117,16 +128,6 @@ fun EditProfileScreen(
     }
 
     TitleBarScaffold(title = "Edit Profile") { padding ->
-        LaunchedEffect(key1 = userData) {
-            userData?.let {
-                name = it.name
-                bio = it.bio ?: ""
-                email = it.email
-                selectedGender = it.gender
-                imageUriString = it.imageUri
-            }
-        }
-
         Box(modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.secondary)
@@ -141,12 +142,13 @@ fun EditProfileScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 // Profile image picker
-                Card {
-                    ProfileImagePicker(
+                Card(
+                    modifier = Modifier.clip(CircleShape)
+                ){
+                    ImagePicker(
                         defaultIconResId = R.drawable.person_24,
-                        imageUri = imageUriString,
-                        imagePickMedia = imageUri
-                    ) {
+                        imageUri = imageState,
+                        onImageUploadClick = {
                         mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
                             type = MediaType.Image,
                             allowMultiple = false,
@@ -163,12 +165,12 @@ fun EditProfileScreen(
                                 ) {
                                     val list = getList()
                                     list.firstOrNull()?.let {
-                                        imageUri = it
+                                        imageState = ImageState.New(pickedMedia = it)
                                     }
                                 }
                             }
                         )
-                    }
+                        })
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -268,6 +270,7 @@ fun EditProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {
+
                         if (name.isNotBlank()) {
                             val user = User(
                                 id = currentUserId(),
@@ -275,11 +278,14 @@ fun EditProfileScreen(
                                 email = email,
                                 bio = bio.takeIf { it.isNotBlank() },
                                 gender = selectedGender,
-                                imageUri = imageUri?.uri
+                                imageUri = null,
+                                fcmToken = null,
+                                lastOnlineTS = Timestamp.now()
                             )
 
                             viewModel.saveUser(
                                 user,
+                                imageState = imageState,
                                 onSuccess = {
                                     Toast.makeText(
                                         context,
@@ -311,3 +317,5 @@ fun EditProfileScreen(
         authority = "com.example.mychatapp.fileprovider"
     )
 }
+
+

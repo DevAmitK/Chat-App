@@ -1,12 +1,12 @@
 package com.example.mychatapp.data.local.repoimpl
 
 import com.example.mychatapp.data.local.DataStoreUtil
-import com.example.mychatapp.domain.local.repo.PreferenceRepo
+import com.example.mychatapp.domain.local.repo.LocalRepo
 import javax.inject.Inject
 
 class PreferenceRepoImpl @Inject constructor(
     private  val dataStore: DataStoreUtil
-) : PreferenceRepo {
+) : LocalRepo {
     override suspend fun getLoginState(): Boolean {
         return dataStore.getData<Boolean>(LOGIN_KEY) ?: false
     }

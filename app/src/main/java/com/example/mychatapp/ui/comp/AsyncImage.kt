@@ -8,19 +8,22 @@ import coil3.compose.SubcomposeAsyncImage
 
 
 @Composable
-fun AsyncImages(
+fun AsyncImage(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    uri : String,
+    uri : String?,
+    contentScale : ContentScale? = null,
+    contentDescription: String? = null
 ) {
     SubcomposeAsyncImage(
         model = uri,
         modifier = modifier
             .run {
                 onClick?.let { clickable {   it() }} ?: this
-            },
-        contentScale = ContentScale.FillBounds,
+            }
+        ,
         loading = {ImageLoading()},
-        contentDescription =null
+        contentDescription =contentDescription,
+        contentScale = contentScale ?: ContentScale.FillWidth
     )
 }

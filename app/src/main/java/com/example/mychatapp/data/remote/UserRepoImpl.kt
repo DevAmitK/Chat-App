@@ -3,7 +3,13 @@ package com.example.mychatapp.data.remote
 import com.example.mychatapp.data.remote.FireBaseCollection.userCollection
 import com.example.mychatapp.domain.model.User
 import com.example.mychatapp.domain.remote.UserRepo
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -35,6 +41,15 @@ class UserRepoImpl @Inject constructor(
             .firstOrNull()
     }
 
+    override suspend fun getUserById(id: String): User{
+        return firestore.userCollection()
+            .document(id)
+            .get()
+            .await()
+            .toObject(User::class.java)
+            ?: error("No User Found In With Id $id")
+    }
+
     override suspend fun getAllUser(): List<User> {
         return firestore.userCollection()
             .get()
@@ -42,5 +57,43 @@ class UserRepoImpl @Inject constructor(
             .toObjects(User::class.java)
     }
 
+    override suspend fun getAllUserFlow(): Flow<List<User>> {
+        return callbackFlow {
+            val registration = firestore.userCollection()
+                .addSnapshotListener { value, error ->
+                    //Handle Error
+                    error?.let {
+                        it.printStackTrace()
+                        error(it.localizedMessage ?: "Firebase Exception" )
+                    }
+                    // Parse docs as List<User>
+                    val users = value?.toObjects(User::class.java)
+                        ?: error("User Not Found")
+                    //Finally emit the list
+                    CoroutineScope(coroutineContext).launch {
+                        send(users)
+                    }
+                }
+            //Remove Listener When Coroutine cansel
+            awaitClose {
+                registration.remove()
+            }
+        }
+
+    }
+
+    override suspend fun updateFcmToken(fcmToken: String, userId: String) {
+        firestore.userCollection()
+            .document(userId)
+            .update(User::fcmToken.name , fcmToken)
+            .await()
+    }
+
+    override suspend fun updateLastOnlineTS(userId: String) {
+        firestore.userCollection()
+            .document(userId)
+            .update(User::lastOnlineTS.name , Timestamp.now())
+            .await()
+    }
 
 }

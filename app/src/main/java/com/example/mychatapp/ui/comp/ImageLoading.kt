@@ -8,6 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,7 +49,8 @@ fun ImageLoading(
     )
     Spacer(
         modifier = modifier
-            .fillMaxSize()
+            .widthIn(min = 150.dp, max = 250.dp)
+            .heightIn(min = 200.dp, max = 250.dp)
             .clip(RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp))
             .background(brush)
     )

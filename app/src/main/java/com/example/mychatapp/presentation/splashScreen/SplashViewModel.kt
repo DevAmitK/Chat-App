@@ -1,7 +1,7 @@
 package com.example.mychatapp.presentation.splashScreen
 
 import androidx.navigation.NavHostController
-import com.example.mychatapp.domain.local.repo.PreferenceRepo
+import com.example.mychatapp.domain.local.repo.LocalRepo
 import com.example.mychatapp.presentation.navigation.Routes
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 
 class SplashViewModel @Inject constructor(
-    private val repo: PreferenceRepo,
+    private val repo: LocalRepo,
 ) : BaseViewModel() {
 
 

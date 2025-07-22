@@ -1,5 +1,6 @@
 package com.example.mychatapp.ui.comp
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -8,31 +9,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.streamliners.pickers.media.PickedMedia
 
 
 @Composable
-fun ProfileImagePicker(
+fun ImagePicker(
     defaultIconResId: Int, // Pass the default drawable resource ID
-    imagePickMedia : PickedMedia ? = null,
-    imageUri : String ? = null,
-    onImageUploadClick: () -> Unit // Callback to handle image upload clicks
+    onImageUploadClick: () -> Unit, // Callback to handle image upload clicks
+    imageUri: ImageState?
 ) {
-    if (imagePickMedia != null) {
+    if (imageUri?.data() != null) {
         AsyncImage(
-            modifier = Modifier.clickable { onImageUploadClick() }
+            modifier = Modifier
+                .clickable { onImageUploadClick() }
                 .size(100.dp)
                 .clip(CircleShape),
-            model = imagePickMedia.uri, contentDescription = null)
-    } else if(imageUri != null){
-        AsyncImage(
-            modifier = Modifier.clickable { onImageUploadClick() }
-                .size(100.dp)
-                .clip(CircleShape),
-            model = imageUri, contentDescription = null)
+            contentScale = ContentScale.Inside,
+            model = imageUri.data(), contentDescription = null)
     } else {
         Icon(
             painter = painterResource(id = defaultIconResId),
