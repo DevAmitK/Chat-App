@@ -2,6 +2,8 @@
 agp = "8.5.2"
 base = "1.2.14"
 coilCompose = "3.0.3"
+firebaseBom = "32.2.2"
+firebaseUiAuth = "8.0.2"
 gson = "2.10.1"
 koinAndroid = " 3.5.3"
 koinAndroidVersion = " 3.5.3"
@@ -25,6 +27,9 @@ base = { module = "com.github.The-Streamliners.DroidLibs:base", version.ref = "b
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 compose-android = { module = "com.github.The-Streamliners.DroidLibs:compose-android", version.ref = "base" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

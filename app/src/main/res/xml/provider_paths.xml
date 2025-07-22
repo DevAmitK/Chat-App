@@ -1,0 +1,9 @@
+<paths>
+    <files-path name="files" path="." />
+    <external-files-path
+        name="files"
+        path="." />
+    <external-cache-path
+        name="capture"
+        path="." />
+</paths>

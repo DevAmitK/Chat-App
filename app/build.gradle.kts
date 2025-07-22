@@ -12,13 +12,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mychat"
+    namespace = "com.example.mychatapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mychat"
+        applicationId = "com.example.mychatapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -62,6 +62,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -85,6 +86,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation (libs.google.firebase.auth)
+    implementation (libs.firebase.bom)
+    implementation (libs.firebase.ui.auth)
 
 
     // Navigation
@@ -114,6 +119,8 @@ dependencies {
     implementation(libs.base)
     implementation(libs.compose.android)
     implementation("com.github.The-Streamliners.DroidLibs:compose:1.2.14")
+    implementation("com.github.The-Streamliners.DroidLibs:utils:1.2.14")
+    implementation("com.github.The-Streamliners.DroidLibs:pickers:1.2.18")
 
     // Koin for Android
     implementation(libs.koin.android)
